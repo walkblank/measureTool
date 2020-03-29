@@ -18,17 +18,51 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_startBtn_clicked();
     void onTimerTimeout();
+
+    void on_startBtn_clicked();
+    void on_menuBtn_clicked();
+    void on_startCalibBtn_clicked();
+
+    void on_upperValue_textChanged(const QString &arg1);
+
+    void on_lowerValue_textChanged(const QString &arg1);
+
+    void on_cnValue_textChanged(const QString &arg1);
+
+    void on_averTime_textChanged(const QString &arg1);
+
+    void on_saveBtn_clicked();
+
+    void on_setMeter_editingFinished();
 
 private:
     Ui::MainWindow *ui;
     MeasureServer *server;
     QChart  *m_chart;
     QChartView *m_chartView;
-    QLineSeries *lineSeries;
+
+    QLineSeries *cpc1slineSeries;
+    QLineSeries *cpc10slineSeries;
+
+    QLineSeries *smpslineSeries;
+
+    QLineSeries *upperCalib;
+    QLineSeries *lowerCalib;
+
     QTimer *timer;
+    QList<qreal> pt, pt1;
+    QList<qreal> spt10s;
+
+    QSettings *settings;
+    QMap<QString, QString> addrList;
+
+    QMap<QString, CalibClient*> connList;
+
 private:
     void initChartsView();
+    void loadSettings();
+    void getLocalIpAddr();
+    bool checkIp(QString ip);
 };
 #endif // MAINWINDOW_H
