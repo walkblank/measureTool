@@ -23,18 +23,15 @@ private slots:
     void on_startBtn_clicked();
     void on_menuBtn_clicked();
     void on_startCalibBtn_clicked();
-
     void on_upperValue_textChanged(const QString &arg1);
-
     void on_lowerValue_textChanged(const QString &arg1);
-
     void on_cnValue_textChanged(const QString &arg1);
-
     void on_averTime_textChanged(const QString &arg1);
-
     void on_saveBtn_clicked();
-
     void on_setMeter_editingFinished();
+
+    void onSigClientConn(QString ip);
+    void onSigClientDisconn(QString ip);
 
 private:
     Ui::MainWindow *ui;
@@ -55,8 +52,8 @@ private:
     QList<qreal> spt10s;
 
     QSettings *settings;
-    QMap<QString, QString> addrList;
 
+    QMap<QString, QString> addrList;
     QMap<QString, CalibClient*> connList;
 
 private:

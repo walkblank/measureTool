@@ -10,6 +10,8 @@ class CalibClient : public QObject
 public:
     CalibClient();
     void AttachSocket(QTcpSocket *sock);
+    qint64 writeData(const char *data);
+    void close();
 
 private slots:
     void onDataReady();

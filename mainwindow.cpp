@@ -9,10 +9,19 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    server = new MeasureServer(connList);
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+    int port = 11231;
     settings = new QSettings("setting.ini", QSettings::IniFormat);
+    if(settings->contains("port"))
+        port = settings->value("port").toUInt();
+    server = new MeasureServer(connList, port);
+    timer = new QTimer();
+    addrList["cpc"] = settings->value("cpcaddr").toString();
+    addrList["smps"] = settings->value("smpsaddr").toString();
+    addrList["test"]  = settings->value("testaddr").toString();
+    server->setClientMap(addrList);
+    connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+    connect(server, SIGNAL(sigOnConnect(QString)), this, SLOT(onSigClientConn(QString)));
+    connect(server, SIGNAL(sigDisconnect(QString)), this, SLOT(onSigClientDisconn(QString)));
 
     initChartsView();
     loadSettings();
@@ -68,7 +77,7 @@ void MainWindow::loadSettings()
 void MainWindow::onTimerTimeout()
 {
     static int cnt = -1;
-    if(cnt < 300)
+    if(cnt < 600)
     {
         pt.prepend(QRandomGenerator::global()->bounded(1.00));
         pt1.prepend(QRandomGenerator::global()->bounded(1.00));
@@ -96,7 +105,6 @@ void MainWindow::initChartsView()
 {
     cpc1slineSeries = new QLineSeries();
     cpc10slineSeries  = new QLineSeries();
-    smpslineSeries = new QLineSeries();
     upperCalib = new QLineSeries();
     lowerCalib = new QLineSeries();
     upperCalib->setPen(QPen(QBrush(Qt::red), 2, Qt::DashLine));
@@ -107,7 +115,6 @@ void MainWindow::initChartsView()
 
     cpc1slineSeries->setName("CPC(1s)");
     cpc10slineSeries->setName("CPC(10s)");
-    smpslineSeries->setName("SMPS");
 
     upperCalib->setName("上限");
     lowerCalib->setName("下限");
@@ -116,7 +123,7 @@ void MainWindow::initChartsView()
     m_chartView->setMinimumSize(1000, 600);
 
     QValueAxis *xAxis = new QValueAxis;
-    xAxis->setRange(0, 300);
+    xAxis->setRange(0, 599);
     xAxis->setTickCount(30);
     xAxis->setMinorTickCount(1);
     xAxis->setLabelFormat("%d");
@@ -131,7 +138,6 @@ void MainWindow::initChartsView()
 
     m_chart->addSeries(cpc1slineSeries);
     m_chart->addSeries(cpc10slineSeries);
-    m_chart->addSeries(smpslineSeries);
     m_chart->addSeries(upperCalib);
     m_chart->addSeries(lowerCalib);
 
@@ -143,9 +149,6 @@ void MainWindow::initChartsView()
 
     cpc10slineSeries->attachAxis(yAxis);
     cpc10slineSeries->attachAxis(xAxis);
-
-    smpslineSeries->attachAxis(yAxis);
-    smpslineSeries->attachAxis(xAxis);
 
     lowerCalib->attachAxis(xAxis);
     lowerCalib->attachAxis(yAxis);
@@ -171,7 +174,14 @@ void MainWindow::on_startCalibBtn_clicked()
     //clear all lines;
     //reset connections;
     //reset server settings, eg. port;
+    // set smps and cpc to classifier mode
+    // show cpc1s and cps10s lineseries;
     qDebug()<<connList.size();
+    qDebug()<<connList.keys();
+    foreach(QString key, connList.keys())
+    {
+        connList[key]->writeData("jjsddfda");
+    }
 }
 
 void MainWindow::on_upperValue_textChanged(const QString &arg1)
@@ -182,7 +192,7 @@ void MainWindow::on_upperValue_textChanged(const QString &arg1)
     {
         upperCalib->clear();
         upperCalib->append(0, v);
-        upperCalib->append(300, v);
+        upperCalib->append(600, v);
     }
     settings->setValue("upper", v);
 
@@ -196,7 +206,7 @@ void MainWindow::on_lowerValue_textChanged(const QString &arg1)
     {
         lowerCalib->clear();
         lowerCalib->append(0, v);
-        lowerCalib->append(300, v);
+        lowerCalib->append(600, v);
     }
     settings->setValue("lower", v);
 
@@ -219,6 +229,7 @@ void MainWindow::on_saveBtn_clicked()
            || !checkIp(ui->testDevAddr->text()))
    {
         QMessageBox::warning(this, "提示", tr("invalid ip address"), QMessageBox::Ok);
+        return;
    }
    else
    {
@@ -231,14 +242,31 @@ void MainWindow::on_saveBtn_clicked()
    if(port < 0 || port > 65535)
    {
         QMessageBox::warning(this, "提示", tr("invalid listen port"), QMessageBox::Ok);
+        return;
    }
    else
    {
        settings->setValue("port", ui->listenPort->text());
    }
+
+   server->setListenPort(port);
+   addrList["cpc"] = ui->cpcAddr->text();
+   addrList["smps"] = ui->smpsAddr->text();
+   addrList["test"]  = ui->testDevAddr->text();
+   server->setClientMap(addrList);
 }
 
 void MainWindow::on_setMeter_editingFinished()
 {
     //send to smps  device   <sendVal140=100;>
+}
+
+void MainWindow::onSigClientConn(QString ip)
+{
+    qDebug()<<"connect signal" << ip;
+}
+
+void MainWindow::onSigClientDisconn(QString ip)
+{
+    qDebug()<<"disconnect signal" << ip;
 }
