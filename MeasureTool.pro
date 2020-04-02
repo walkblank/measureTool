@@ -20,12 +20,14 @@ RC_ICONS = logo.ico
 
 SOURCES += \
     calibclient.cpp \
+    datacomparemodel.cpp \
     main.cpp \
     mainwindow.cpp \
     measureserver.cpp
 
 HEADERS += \
     calibclient.h \
+    datacomparemodel.h \
     mainwindow.h \
     measureserver.h
 
