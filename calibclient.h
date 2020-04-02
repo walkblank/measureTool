@@ -13,12 +13,11 @@ public:
     void setClientType(QString type) {clientType = type;}
     QString getClientType() { return clientType;}
 
-    int sendCpcValue(int cmd, int value);
-    int getCpcValue(int cmd);
+    int getValue(QList<int> vals);
+    int setValue(QMap<int,int> valueSet);
+    void setMode(QList<int> modes);
 
-    qint64 writeData(const char *data);
     void close();
-
 signals:
     void sigReadData(QString type, QString value);
 

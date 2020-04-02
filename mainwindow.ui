@@ -29,7 +29,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="cnValue"/>
+           <widget class="QLineEdit" name="cnValue">
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_8">
@@ -53,7 +57,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="averTime"/>
+           <widget class="QLineEdit" name="averTime">
+            <property name="text">
+             <string>10</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_10">
@@ -99,6 +110,9 @@
               <width>120</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -276,6 +290,9 @@
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 127);</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
            </layout>
@@ -293,6 +310,9 @@
              <widget class="QLineEdit" name="cpcAddr">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 127);</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -312,6 +332,9 @@
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 127);</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
            </layout>
@@ -330,7 +353,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="localAddr"/>
+             <widget class="QLineEdit" name="localAddr">
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -347,6 +374,9 @@
              <widget class="QLineEdit" name="listenPort">
               <property name="text">
                <string>11231</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -410,7 +440,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_6"/>
+         <widget class="QLineEdit" name="lineEdit_6">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_12">
@@ -438,7 +472,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="value1e"/>
+         <widget class="QLineEdit" name="value1e">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_14">
@@ -455,7 +493,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="value2e"/>
+         <widget class="QLineEdit" name="value2e">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_17">
@@ -472,7 +514,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="value3e"/>
+         <widget class="QLineEdit" name="value3e">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_18">

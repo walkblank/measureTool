@@ -178,11 +178,6 @@ void MainWindow::on_menuBtn_clicked()
 
 void MainWindow::on_startCalibBtn_clicked()
 {
-    QByteArray data = "testjjj\r\n";
-    data.replace("\r\n", ";");
-    qDebug()<<"data" << data;
-    qDebug()<<"last index of" <<data.lastIndexOf(";");
-    qDebug()<<"data size" << data.size();
     //clear all lines;
     //reset connections;
     //reset server settings, eg. port;
@@ -190,13 +185,13 @@ void MainWindow::on_startCalibBtn_clicked()
     // show cpc1s and cps10s lineseries;
     qDebug()<<connList.size();
     qDebug()<<connList.keys();
-    //    foreach(QString key, connList.keys())
-    //    {
-    //        connList[key]->
-    //    }
+
     if(connList.contains(addrList["cpc"]))
     {
-        connList[addrList["cpc"]]->writeData("iamcpcdevice\n");
+        QMap<int,int> valueSet;
+        valueSet[201] = 4;
+        valueSet[140] = 100;
+        connList[addrList["cpc"]]->setValue(valueSet);
     }
 }
 
