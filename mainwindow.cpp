@@ -18,10 +18,16 @@ MainWindow::MainWindow(QWidget *parent)
     addrList["cpc"] = settings->value("cpcaddr").toString();
     addrList["smps"] = settings->value("smpsaddr").toString();
     addrList["test"]  = settings->value("testaddr").toString();
+
+    addrLineList["cpc"] = ui->cpcAddr;
+    addrLineList["smps"] = ui->smpsAddr;
+    addrLineList["test"] = ui->testDevAddr;
+
     server->setClientMap(addrList);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     connect(server, SIGNAL(sigOnConnect(QString)), this, SLOT(onSigClientConn(QString)));
     connect(server, SIGNAL(sigDisconnect(QString)), this, SLOT(onSigClientDisconn(QString)));
+    connect(server, SIGNAL(sigOnClientData(QString,QString)), this, SLOT(onClientData(QString,QString)));
 
     initChartsView();
     loadSettings();
@@ -41,7 +47,8 @@ void MainWindow::getLocalIpAddr()
         if(addr.protocol() == QAbstractSocket::IPv4Protocol)
         {
             ui->localAddr->setText(addr.toString());
-            break;
+            qDebug()<<addr.toString();
+//            break;
         }
     }
 }
@@ -171,6 +178,11 @@ void MainWindow::on_menuBtn_clicked()
 
 void MainWindow::on_startCalibBtn_clicked()
 {
+    QByteArray data = "testjjj\r\n";
+    data.replace("\r\n", ";");
+    qDebug()<<"data" << data;
+    qDebug()<<"last index of" <<data.lastIndexOf(";");
+    qDebug()<<"data size" << data.size();
     //clear all lines;
     //reset connections;
     //reset server settings, eg. port;
@@ -178,9 +190,13 @@ void MainWindow::on_startCalibBtn_clicked()
     // show cpc1s and cps10s lineseries;
     qDebug()<<connList.size();
     qDebug()<<connList.keys();
-    foreach(QString key, connList.keys())
+    //    foreach(QString key, connList.keys())
+    //    {
+    //        connList[key]->
+    //    }
+    if(connList.contains(addrList["cpc"]))
     {
-        connList[key]->writeData("jjsddfda");
+        connList[addrList["cpc"]]->writeData("iamcpcdevice\n");
     }
 }
 
@@ -264,9 +280,22 @@ void MainWindow::on_setMeter_editingFinished()
 void MainWindow::onSigClientConn(QString ip)
 {
     qDebug()<<"connect signal" << ip;
+    foreach(QString str, addrList.keys())
+        if(addrList[str] == ip)
+            addrLineList[str]->setStyleSheet("background-color: rgb(0, 255, 127);");
 }
 
 void MainWindow::onSigClientDisconn(QString ip)
 {
     qDebug()<<"disconnect signal" << ip;
+    foreach(QString str, addrList.keys())
+    {
+        if(addrList[str] == ip)
+            addrLineList[str]->setStyleSheet("background-color: rgb(255, 255, 127);");
+    }
+}
+
+void MainWindow::onClientData(QString cpc, QString data)
+{
+
 }

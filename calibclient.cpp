@@ -22,5 +22,7 @@ void CalibClient::close()
 
 void CalibClient::onDataReady()
 {
-    qDebug()<<sock->readAll();
+    QByteArray readData = sock->readAll();
+    readData.replace("test", "kkk");
+    readData.lastIndexOf(QByteArray("\r\n"));
 }

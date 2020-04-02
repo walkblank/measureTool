@@ -32,6 +32,7 @@ private slots:
 
     void onSigClientConn(QString ip);
     void onSigClientDisconn(QString ip);
+    void onClientData(QString, QString);
 
 private:
     Ui::MainWindow *ui;
@@ -42,7 +43,7 @@ private:
     QLineSeries *cpc1slineSeries;
     QLineSeries *cpc10slineSeries;
 
-    QLineSeries *smpslineSeries;
+    QLineSeries *testDevLineSeries;
 
     QLineSeries *upperCalib;
     QLineSeries *lowerCalib;
@@ -55,6 +56,7 @@ private:
 
     QMap<QString, QString> addrList;
     QMap<QString, CalibClient*> connList;
+    QMap<QString, QLineEdit*> addrLineList;
 
 private:
     void initChartsView();

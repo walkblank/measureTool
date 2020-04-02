@@ -19,6 +19,7 @@ void MeasureServer::setListenPort(int port)
         {
             clientList[key]->close();
             delete clientList[key];
+            emit sigDisconnect(key);
         }
         clientList.clear();
     }
@@ -27,6 +28,7 @@ void MeasureServer::setListenPort(int port)
 void MeasureServer::setClientMap(QMap<QString, QString> map)
 {
     qDebug()<< "set client map";
+    qDebug() <<map<< clientMap;
     if(!clientMap.isEmpty())
     {
         qDebug()<<"clear old clients";
@@ -34,11 +36,13 @@ void MeasureServer::setClientMap(QMap<QString, QString> map)
         {
             if(map[key] != clientMap[key])
             {
+                qDebug()<<"change key" << key << clientMap[key];
                 if(clientList.contains(clientMap[key]))
                 {
-                    clientList[key]->close();
-                    delete clientList[key];
-                    clientList.remove(key);
+                    clientList[clientMap[key]]->close();
+                    delete clientList[clientMap[key]];
+                    clientList.remove(clientMap[key]);
+                    emit sigDisconnect(map[key]);
                     qDebug()<<"clear " << key;
                 }
                 else
@@ -49,27 +53,39 @@ void MeasureServer::setClientMap(QMap<QString, QString> map)
         }
     }
     clientMap = map;
+    qDebug() <<map<< clientMap;
 }
 
 void MeasureServer::onClientDisconnect()
 {
     QTcpSocket *sock = static_cast<QTcpSocket*>(sender());
     qDebug()<<"disconnect" << sock->peerAddress().toString();
-    clientList[sock->peerAddress().toString()]->close();
+    QString key = sock->peerAddress().toString();
+    clientList[key]->close();
+    delete clientList[key];
+    clientList.remove(key);
     emit sigDisconnect(sock->peerAddress().toString());
 }
 
 void MeasureServer::onNewConnection()
 {
     qDebug()<<"new Connect";
-    CalibClient *client = new CalibClient();
     QTcpSocket *socket = serverSocket->nextPendingConnection();
-    client->AttachSocket(socket);
     connect(socket, SIGNAL(disconnected()), this, SLOT(onClientDisconnect()));
-    qDebug()<<socket->peerName();
-    qDebug()<<socket->peerPort();
     qDebug()<<socket->peerAddress();
-//    if(clientList.contains(socket))
-    clientList[socket->peerAddress().toString()] = client;
-    emit sigOnConnect(socket->peerAddress().toString());
+    QString address = socket->peerAddress().toString();
+    foreach(QString key, clientMap.keys())
+    {
+        if(clientMap[key] == address)
+        {
+            qDebug()<<"test client connection" << key << address;
+            CalibClient *client = new CalibClient();
+            client->AttachSocket(socket);
+            connect(client, SIGNAL(sigReadData(QString,QString)), this, SIGNAL(sigOnClientData(QString,QString)));
+            client->setClientType(key);
+            clientList[socket->peerAddress().toString()] = client;
+            emit sigOnConnect(socket->peerAddress().toString());
+            break;
+        }
+    }
 }
