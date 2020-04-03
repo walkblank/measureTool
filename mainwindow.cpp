@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
         port = settings->value("port").toUInt();
     server = new MeasureServer(connList, port);
     timer = new QTimer();
+
     addrList["cpc"] = settings->value("cpcaddr").toString();
     addrList["smps"] = settings->value("smpsaddr").toString();
     addrList["test"]  = settings->value("testaddr").toString();
@@ -29,8 +30,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(server, SIGNAL(sigDisconnect(QString)), this, SLOT(onSigClientDisconn(QString)));
     connect(server, SIGNAL(sigOnClientData(QString,QString)), this, SLOT(onClientData(QString,QString)));
 
+    ui->localAddr->hide();
     initChartsView();
     loadSettings();
+
+    simuPage = new ClientSimuPage();
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +52,7 @@ void MainWindow::getLocalIpAddr()
         {
             ui->localAddr->setText(addr.toString());
             qDebug()<<addr.toString();
+            ui->localAddrList->addItem(addr.toString());
 //            break;
         }
     }
@@ -130,8 +135,8 @@ void MainWindow::initChartsView()
     m_chartView->setMinimumSize(1000, 600);
 
     QValueAxis *xAxis = new QValueAxis;
-    xAxis->setRange(0, 599);
-    xAxis->setTickCount(30);
+    xAxis->setRange(0, 600);
+    xAxis->setTickCount(31);
     xAxis->setMinorTickCount(1);
     xAxis->setLabelFormat("%d");
     xAxis->setTitleText("time(s)");
@@ -293,4 +298,9 @@ void MainWindow::onSigClientDisconn(QString ip)
 void MainWindow::onClientData(QString cpc, QString data)
 {
 
+}
+
+void MainWindow::on_clientListBtn_clicked()
+{
+    simuPage->show();
 }

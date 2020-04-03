@@ -4,6 +4,11 @@ CalibClient::CalibClient()
 {
 }
 
+CalibClient::CalibClient(QString s)
+{
+    sock = new QTcpSocket(this);
+}
+
 void CalibClient::AttachSocket(QTcpSocket *sock)
 {
     this->sock = sock;
@@ -13,6 +18,11 @@ void CalibClient::AttachSocket(QTcpSocket *sock)
 void CalibClient::close()
 {
     return sock->close();
+}
+
+void CalibClient::connectToHost(QString host, int port)
+{
+    sock->connectToHost(host, port);
 }
 
 int CalibClient::getValue(QList<int> vals)

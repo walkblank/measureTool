@@ -20,6 +20,7 @@ RC_ICONS = logo.ico
 
 SOURCES += \
     calibclient.cpp \
+    clientsimupage.cpp \
     datacomparemodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,11 +28,13 @@ SOURCES += \
 
 HEADERS += \
     calibclient.h \
+    clientsimupage.h \
     datacomparemodel.h \
     mainwindow.h \
     measureserver.h
 
 FORMS += \
+    clientsimupage.ui \
     mainwindow.ui
 
 # Default rules for deployment.

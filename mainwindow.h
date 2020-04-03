@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <measureserver.h>
 #include <QtCharts>
+
+#include <measureserver.h>
+#include "clientsimupage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,6 +36,8 @@ private slots:
     void onSigClientDisconn(QString ip);
     void onClientData(QString, QString);
 
+    void on_clientListBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     MeasureServer *server;
@@ -44,6 +48,7 @@ private:
     QLineSeries *cpc10slineSeries;
 
     QLineSeries *testDevLineSeries;
+    ClientSimuPage *simuPage;
 
     QLineSeries *upperCalib;
     QLineSeries *lowerCalib;
