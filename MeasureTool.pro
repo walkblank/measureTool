@@ -1,6 +1,7 @@
 QT       += core gui
 QT       += charts
 QT       += network
+QT       += xlsx
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,23 +19,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 RC_ICONS = logo.ico
 
+RESOURCES += \
+    res.qrc \
+    res.qrc
+
 SOURCES += \
     calibclient.cpp \
+    clientsettingwindow.cpp \
     clientsimupage.cpp \
     datacomparemodel.cpp \
+    datacomparewindow.cpp \
     main.cpp \
     mainwindow.cpp \
     measureserver.cpp
 
 HEADERS += \
     calibclient.h \
+    clientsettingwindow.h \
     clientsimupage.h \
     datacomparemodel.h \
+    datacomparewindow.h \
     mainwindow.h \
     measureserver.h
 
 FORMS += \
+    clientsettingwindow.ui \
     clientsimupage.ui \
+    datacomparewindow.ui \
     mainwindow.ui
 
 # Default rules for deployment.

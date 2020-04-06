@@ -47,6 +47,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="cpcDisconnBtn">
+       <property name="text">
+        <string>Disconnect</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -68,6 +75,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="smpsDisconnBtn">
+       <property name="text">
+        <string>Disconnect</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -86,6 +100,13 @@
       <widget class="QPushButton" name="testConnBtn">
        <property name="text">
         <string>connect</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="testDevDisconnBtn">
+       <property name="text">
+        <string>Disconnect</string>
        </property>
       </widget>
      </item>

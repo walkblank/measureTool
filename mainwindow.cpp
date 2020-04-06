@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QRandomGenerator>
 #include <QHostInfo>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
         port = settings->value("port").toUInt();
     server = new MeasureServer(connList, port);
     timer = new QTimer();
+    autoTimer = new QTimer();
 
     addrList["cpc"] = settings->value("cpcaddr").toString();
     addrList["smps"] = settings->value("smpsaddr").toString();
@@ -26,15 +28,27 @@ MainWindow::MainWindow(QWidget *parent)
 
     server->setClientMap(addrList);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+    connect(autoTimer, SIGNAL(timeout()), this, SLOT(onAutoTimeout()));
+
     connect(server, SIGNAL(sigOnConnect(QString)), this, SLOT(onSigClientConn(QString)));
     connect(server, SIGNAL(sigDisconnect(QString)), this, SLOT(onSigClientDisconn(QString)));
-    connect(server, SIGNAL(sigOnClientData(QString,QString)), this, SLOT(onClientData(QString,QString)));
-
-    ui->localAddr->hide();
+    connect(server, SIGNAL(sigOnClientData(QString,QMap<QString,QString>)),
+            this, SLOT(onClientData(QString, QMap<QString,QString>)));
+    connect(server, SIGNAL(sigSetRet(QString,QString, QMap<QString,QString>)),
+            this, SLOT(onClientRet(QString,QString, QMap<QString,QString>)));
     initChartsView();
     loadSettings();
 
+    model = new DatacompareModel();
+    compareWindow = new DatacompareWindow();
+    compareWindow->setWindowTitle("Compare Table");
+    compareWindow->setModel(model);
+
+    pointMaps["cpc"] = cpcPt1;
+    pointMaps["test"] = cpcTest;
+    pointMaps["cpc10"] = cpcPt10;
     simuPage = new ClientSimuPage();
+    settingWindow = new ClientSettingWindow();
 }
 
 MainWindow::~MainWindow()
@@ -50,10 +64,8 @@ void MainWindow::getLocalIpAddr()
     {
         if(addr.protocol() == QAbstractSocket::IPv4Protocol)
         {
-            ui->localAddr->setText(addr.toString());
             qDebug()<<addr.toString();
             ui->localAddrList->addItem(addr.toString());
-//            break;
         }
     }
 }
@@ -74,49 +86,69 @@ void MainWindow::loadSettings()
         ui->upperValue->setText(settings->value("upper").toString());
     if(settings->contains("lower"))
         ui->lowerValue->setText(settings->value("lower").toString());
-
     if(settings->contains("cpcaddr"))
         ui->cpcAddr->setText(settings->value("cpcaddr").toString());
     if(settings->contains("smpsaddr"))
         ui->smpsAddr->setText(settings->value("smpsaddr").toString());
     if(settings->contains("testaddr"))
         ui->testDevAddr->setText(settings->value("testaddr").toString());
-
     if(settings->contains("port"))
         ui->listenPort->setText(settings->value("port").toString());
+    if(settings->contains("diameter"))
+        ui->setMeter->setText(settings->value("diameter").toString());
+    if(settings->contains("avtime"))
+        ui->averTime->setText(settings->value("avtime").toString());
+}
+
+void MainWindow::onAutoTimeout()
+{
+    QList<QString> channels;
+    channels << "25";
+    connList[addrList["cpc"]]->getValue(channels);
+    connList[addrList["test"]]->getValue(channels);
 }
 
 void MainWindow::onTimerTimeout()
 {
-    static int cnt = -1;
-    if(cnt < 600)
-    {
-        pt.prepend(QRandomGenerator::global()->bounded(1.00));
-        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
-        cnt ++;
-    }
-    else
-    {
-        cnt ++;
-        pt.prepend(QRandomGenerator::global()->bounded(1.00));
-        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
-        pt.removeAt(pt.size());
-        pt1.removeAt(pt1.size());
-    }
-    cpc1slineSeries->clear();
-    cpc10slineSeries->clear();
-    for(int i = 0; i < pt.size(); i ++)
-    {
-        cpc1slineSeries->append(i, pt[i]);
-        cpc10slineSeries->append(i, pt1[i]);
-    }
 
+//    static int cnt = -1;
+//    if(cnt < 600)
+//    {
+//        pt.prepend(QRandomGenerator::global()->bounded(1.00));
+//        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
+//        cnt ++;
+//    }
+//    else
+//    {
+//        cnt ++;
+//        pt.prepend(QRandomGenerator::global()->bounded(1.00));
+//        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
+//        pt.removeAt(pt.size());
+//        pt1.removeAt(pt1.size());
+//    }
+//    cpc1slineSeries->clear();
+//    cpc10slineSeries->clear();
+//    for(int i = 0; i < pt.size(); i ++)
+//    {
+//        cpc1slineSeries->append(i, pt[i]);
+//        cpc10slineSeries->append(i, pt1[i]);
+//    }
+    qDebug()<<"request cpc data";
+    QList<QString> getChannels;
+    getChannels << "25";
+    connList[addrList["cpc"]]->getValue(getChannels);
+    connList[addrList["test"]]->getValue(getChannels);
+    getChannels.clear();
+    getChannels << "21" << "26" << "27" << "28";
+    connList[addrList["smps"]]->getValue(getChannels);
 }
 
 void MainWindow::initChartsView()
 {
     cpc1slineSeries = new QLineSeries();
     cpc10slineSeries  = new QLineSeries();
+    testDevLineSeries = new QLineSeries();
+
     upperCalib = new QLineSeries();
     lowerCalib = new QLineSeries();
     upperCalib->setPen(QPen(QBrush(Qt::red), 2, Qt::DashLine));
@@ -124,15 +156,17 @@ void MainWindow::initChartsView()
 
     cpc1slineSeries->setUseOpenGL(true);
     cpc10slineSeries->setUseOpenGL(true);
+    testDevLineSeries->setUseOpenGL(true);
 
     cpc1slineSeries->setName("CPC(1s)");
     cpc10slineSeries->setName("CPC(10s)");
+    testDevLineSeries->setName("testDev");
 
     upperCalib->setName("上限");
     lowerCalib->setName("下限");
 
     m_chartView = new QChartView(m_chart);
-    m_chartView->setMinimumSize(1000, 600);
+    m_chartView->setMinimumSize(1200, 600);
 
     QValueAxis *xAxis = new QValueAxis;
     xAxis->setRange(0, 600);
@@ -150,6 +184,7 @@ void MainWindow::initChartsView()
 
     m_chart->addSeries(cpc1slineSeries);
     m_chart->addSeries(cpc10slineSeries);
+    m_chart->addSeries(testDevLineSeries);
     m_chart->addSeries(upperCalib);
     m_chart->addSeries(lowerCalib);
 
@@ -162,6 +197,9 @@ void MainWindow::initChartsView()
     cpc10slineSeries->attachAxis(yAxis);
     cpc10slineSeries->attachAxis(xAxis);
 
+    testDevLineSeries->attachAxis(xAxis);
+    testDevLineSeries->attachAxis(yAxis);
+
     lowerCalib->attachAxis(xAxis);
     lowerCalib->attachAxis(yAxis);
     upperCalib->attachAxis(xAxis);
@@ -173,17 +211,32 @@ void MainWindow::initChartsView()
 
 void MainWindow::on_startBtn_clicked()
 {
-    timer->start(200);
+    cpcPt1.clear();
+    cpcPt10.clear();
+    cpcTest.clear();
+    cpc1slineSeries->clear();
+    cpc10slineSeries->clear();
+    testDevLineSeries->clear();
+    autom = true;
+    calib = false;
+    timer->stop();
+    autoTimer->start(1000);
 }
 
 void MainWindow::on_menuBtn_clicked()
 {
-
+    settingWindow->show();
 }
 
 void MainWindow::on_startCalibBtn_clicked()
 {
     //clear all lines;
+    cpc1slineSeries->clear();
+    cpc10slineSeries->clear();
+    averageTime = ui->averTime->text().toInt();
+    qDebug()<<"times" << 600/averageTime;
+
+    calib = true;
     //reset connections;
     //reset server settings, eg. port;
     // set smps and cpc to classifier mode
@@ -193,10 +246,9 @@ void MainWindow::on_startCalibBtn_clicked()
 
     if(connList.contains(addrList["cpc"]))
     {
-        QMap<int,int> valueSet;
-        valueSet[201] = 4;
-        valueSet[140] = 100;
-        connList[addrList["cpc"]]->setValue(valueSet);
+        connList[addrList["cpc"]]->enterClassifierMode(ui->setMeter->text());
+        connList[addrList["smps"]]->enterClassifierMode(ui->setMeter->text());
+        connList[addrList["test"]]->enterClassifierMode(ui->setMeter->text());
     }
 }
 
@@ -225,17 +277,13 @@ void MainWindow::on_lowerValue_textChanged(const QString &arg1)
         lowerCalib->append(600, v);
     }
     settings->setValue("lower", v);
-
-}
-
-void MainWindow::on_cnValue_textChanged(const QString &arg1)
-{
-
 }
 
 void MainWindow::on_averTime_textChanged(const QString &arg1)
 {
-
+    bool ret;
+    if(arg1.toInt(&ret))
+        settings->setValue("avtime", arg1);
 }
 
 void MainWindow::on_saveBtn_clicked()
@@ -272,11 +320,6 @@ void MainWindow::on_saveBtn_clicked()
    server->setClientMap(addrList);
 }
 
-void MainWindow::on_setMeter_editingFinished()
-{
-    //send to smps  device   <sendVal140=100;>
-}
-
 void MainWindow::onSigClientConn(QString ip)
 {
     qDebug()<<"connect signal" << ip;
@@ -295,12 +338,172 @@ void MainWindow::onSigClientDisconn(QString ip)
     }
 }
 
-void MainWindow::onClientData(QString cpc, QString data)
+void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 {
+    qDebug()<<"onData" << client << data;
+    if(client == "smps")
+    {
+        ui->smpsVal21->setText(data["21"]);
+        ui->smpsVal26->setText(data["26"]);
+        ui->smpsVal27->setText(data["27"]);
+        ui->smpsVal28->setText(data["28"]);
+    }
 
+    if(client == "cpc")
+    {
+        if(data.contains("25"))
+        {
+            double value = data["25"].toDouble();
+            static QList<double> tmpPt;
+            ui->cnValue->setText(data["25"]);
+
+            if(autom)
+            {
+                datetimeList.append(QDateTime::currentDateTime().toString("yyyy-MMdd-hh:mm:ss"));
+                cpcVList.append(value);
+                if(cpcVList.size() >= testVList.size() && errVList.size() < testVList.size())
+                {
+                    errVList.append(cpcVList[errVList.size()] - testVList[errVList.size()]);
+                }
+            }
+
+            tmpPt.prepend(value);
+            if(cpcPt1.size() < 600)
+            {
+                cpcPt1.prepend(value);
+            }
+            else
+            {
+                cpcPt1.prepend(value);
+                cpcPt1.removeAt(cpcPt1.size());
+            }
+
+            double sum = 0;
+            if(tmpPt.size() == averageTime)
+            {
+                foreach(double v, tmpPt)
+                    sum += v;
+                sum = sum/averageTime;
+                if(cpcPt10.size() < 600/averageTime)
+                {
+                    cpcPt10.prepend(sum);
+                }
+                else
+                {
+                    cpcPt10.prepend(sum);
+                    cpcPt10.removeAt(cpcPt10.size());
+                }
+                tmpPt.clear();
+                qDebug()<< cpcPt10;
+            }
+
+            cpc1slineSeries->clear();
+            cpc10slineSeries->clear();
+            for(int i = 0; i < cpcPt1.size(); i ++)
+            {
+                cpc1slineSeries->append(i, cpcPt1[i]);
+            }
+
+            if(!autom)
+            {
+                cpc10slineSeries->clear();
+                for(int i = 0; i < cpcPt10.size(); i ++)
+                    cpc10slineSeries->append(i*averageTime+cpcPt1.size()-averageTime*cpcPt10.size(), cpcPt10[i]);
+
+                if(cpcPt10.size() > 0 && sum > ui->lowerValue->text().toDouble() && sum < ui->upperValue->text().toDouble())
+                {
+                    ui->startBtn->setDisabled(false);
+//                    calib = false;
+                }
+            }
+        }
+    }
+
+    if(client == "test")
+    {
+        if(data.contains("25"))
+        {
+            double value = data["25"].toDouble();
+            qDebug()<<"on testDev data";
+            if(autom)
+            {
+                //testList.append(new QStandardItem(data["25"]));
+                testVList.append(value);
+                if(cpcVList.size() >= testVList.size() && errVList.size() < testVList.size())
+                {
+                    errVList.append(cpcVList[errVList.size()] - testVList[errVList.size()]);
+                }
+            }
+            if(!calib)
+            {
+                if(cpcTest.size() < 600 )
+                {
+                    cpcTest.prepend(value);
+                }
+                else
+                {
+                    cpcTest.prepend(value);
+                    cpcTest.removeAt(cpcTest.size());
+                }
+
+                testDevLineSeries->clear();
+                for(int i = 0; i < cpcTest.size(); i ++)
+                {
+                    testDevLineSeries->append(i, cpcTest[i]);
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::onClientRet(QString type, QString ret, QMap<QString,QString> setValues)
+{
+    qDebug()<<"on Ret" << type << ret << setValues;
+    if(setValues.contains("201") && setValues["201"] == "4")
+    {
+        qDebug()<<"type" <<type <<"enter class mode" << ret;
+        if(ret == "ok")
+            enterClsDevs.append(type);
+    }
+
+    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps") && enterClsDevs.contains("test"))
+    {
+        enterClsDevs.clear();
+        timer->start(1000);
+    }
+
+    if(enterAutoDevs.contains("cpc") && enterAutoDevs.contains("smps") && enterAutoDevs.contains("test"))
+    {
+        enterAutoDevs.clear();
+    }
 }
 
 void MainWindow::on_clientListBtn_clicked()
 {
     simuPage->show();
+}
+
+void MainWindow::on_setMeter_textChanged(const QString &arg1)
+{
+    bool ret;
+    ret = arg1.toInt(&ret);
+    if(ret)
+        settings->setValue("diameter", arg1);
+}
+
+void MainWindow::on_tableBtn_clicked()
+{
+    model->removeRows(0, model->rowCount());
+    for(int i = 0; i < errVList.size(); i ++)
+    {
+        if(i > testVList.size() || i > cpcVList.size())
+            break;
+        QList<QStandardItem*> rowItems;
+        rowItems << new QStandardItem(datetimeList[i]) << new QStandardItem(QString("%1").arg(cpcVList[i]))
+                 << new QStandardItem(QString("%1").arg(testVList[i])) << new QStandardItem(QString("%1").arg(errVList[i]));
+
+        model->appendRow(rowItems);
+    }
+
+    compareWindow->show();
 }

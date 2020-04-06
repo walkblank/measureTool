@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>smps.png</file>
+        <file>cpc.png</file>
+    </qresource>
+</RCC>

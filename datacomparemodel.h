@@ -17,8 +17,13 @@ class DatacompareModel : public QStandardItemModel
 public:
     explicit DatacompareModel(QObject *parent = nullptr);
     QVariant data(const QModelIndex &index, int role) const;
-    void insertCPCData(double value);
-    void insertTestDevData(double value);
+    void setThreshold(double value) {threshold = value;}
+
+    void insertCPCData(QString time, QString cpc);
+    void insertTestDevData(QString value);
+
+private:
+    double threshold;
 };
 
 #endif // DATACOMPAREMODEL_H

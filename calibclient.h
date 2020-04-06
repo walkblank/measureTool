@@ -2,6 +2,7 @@
 #define CALIBCLIENT_H
 
 #include <QObject>
+#include <QRandomGenerator>
 #include <QTcpSocket>
 
 class CalibClient : public QObject
@@ -15,15 +16,23 @@ public:
     void setClientType(QString type) {clientType = type;}
     QString getClientType() { return clientType;}
 
-    int getValue(QList<int> vals);
-    int setValue(QMap<int,int> valueSet);
+    void enterClassifierMode(QString diameter);
+    void enterAutoMode();
 
-    void setMode(QList<int> modes);
+    int getValue(QList<QString> vals);
+    int setValue(QMap<QString,QString> valueSet);
+
+    int sendValues(QMap<int, QVariant>);
+    void setMode(QList<QString> imodes) {modes = imodes;}
+    QList<QString> getMode() {return modes;}
 
     void connectToHost(QString host, int port);
+    void disconnect();
     void close();
+
 signals:
-    void sigReadData(QString type, QString value);
+    void sigReadData(QString type, QMap<QString,QString> values);
+    void sigSetRet(QString type, QString ret, QMap<QString,QString> setValues);
 
 private slots:
     void onDataReady();
@@ -32,6 +41,15 @@ private:
     QTcpSocket *sock;
     QString clientType = QString();
     QByteArray dataRemain;
+    bool beSimu = false;
+    QMap<QString,QString> devValueSet;
+    QMap<QString,QString> sendValueSet;
+    QList<QString> modes;
+    QString mode;
+
+private:
+    void commDataProcess();
+    void simuDataProcess();
 };
 
 #endif // CALIBCLIENT_H

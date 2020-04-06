@@ -17,7 +17,8 @@ public:
 signals:
     void sigOnConnect(QString ip);
     void sigDisconnect(QString ip);
-    void sigOnClientData(QString type, QString value);
+    void sigOnClientData(QString type, QMap<QString,QString> map);
+    void sigSetRet(QString type, QString ret, QMap<QString,QString>);
 
 private slots:
     void onNewConnection();
