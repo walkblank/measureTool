@@ -180,6 +180,10 @@ void CalibClient::simuDataProcess()
                 {
                     sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(1.00)));
                 }
+                else if(singleCmd == "0")
+                {
+                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(2)));
+                }
                 else
                 {
                     sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(100)));

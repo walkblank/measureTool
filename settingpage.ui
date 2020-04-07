@@ -1,22 +1,456 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>SettingPage</class>
- <widget name="SettingPage" class="QWidget">
+ <widget class="QWidget" name="SettingPage">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
-    <height>640</height>
+    <width>811</width>
+    <height>519</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Settings</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>SMPS</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>1</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="widget" native="true">
+           <property name="styleSheet">
+            <string notr="true">image: url(:/image/smps.png);</string>
+           </property>
+           <widget class="QLineEdit" name="smpsVal3">
+            <property name="geometry">
+             <rect>
+              <x>80</x>
+              <y>150</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(85, 255, 0);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal8">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>220</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(85, 255, 0);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal9">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>260</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(85, 255, 0);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal5">
+            <property name="geometry">
+             <rect>
+              <x>390</x>
+              <y>20</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(206, 206, 206);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal25">
+            <property name="geometry">
+             <rect>
+              <x>550</x>
+              <y>20</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(206, 206, 206);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal1">
+            <property name="geometry">
+             <rect>
+              <x>380</x>
+              <y>110</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(55, 212, 255);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal2">
+            <property name="geometry">
+             <rect>
+              <x>380</x>
+              <y>160</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(55, 212, 255);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal0">
+            <property name="geometry">
+             <rect>
+              <x>580</x>
+              <y>150</y>
+              <width>91</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(55, 212, 255);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal21">
+            <property name="geometry">
+             <rect>
+              <x>380</x>
+              <y>240</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(220, 147, 0);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal22">
+            <property name="geometry">
+             <rect>
+              <x>520</x>
+              <y>240</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(206, 206, 206);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="smpsVal4">
+            <property name="geometry">
+             <rect>
+              <x>320</x>
+              <y>310</y>
+              <width>101</width>
+              <height>51</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(55, 212, 255);</string>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="readSMPSBtn">
+             <property name="text">
+              <string>读取参数</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>CPC</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0">
+         <item>
+          <widget class="QWidget" name="widget_2" native="true">
+           <property name="styleSheet">
+            <string notr="true">image: url(:/image/cpc.png);</string>
+           </property>
+           <widget class="QLineEdit" name="cpcVal29">
+            <property name="geometry">
+             <rect>
+              <x>180</x>
+              <y>87</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(188, 188, 188);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="cpcVal30">
+            <property name="geometry">
+             <rect>
+              <x>180</x>
+              <y>210</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(78, 164, 255);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="cpcVal24">
+            <property name="geometry">
+             <rect>
+              <x>180</x>
+              <y>305</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 85, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="cpcVal0">
+            <property name="geometry">
+             <rect>
+              <x>490</x>
+              <y>105</y>
+              <width>31</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 255, 0);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="cpcVal4">
+            <property name="geometry">
+             <rect>
+              <x>580</x>
+              <y>150</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(188, 188, 188);</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="cpcVal27">
+            <property name="geometry">
+             <rect>
+              <x>440</x>
+              <y>365</y>
+              <width>111</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(188, 188, 188);</string>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="readCPCBtn">
+             <property name="text">
+              <string>读取参数</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

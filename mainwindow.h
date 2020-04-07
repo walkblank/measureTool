@@ -10,6 +10,7 @@
 #include "clientsimupage.h"
 #include "datacomparewindow.h"
 #include "clientsettingwindow.h"
+#include  "settingpage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -89,6 +90,7 @@ private:
     QList<QStandardItem*> errList;
     DatacompareWindow *compareWindow;
     ClientSettingWindow *settingWindow;
+    SettingPage *settingPage;
 
 private:
     void initChartsView();

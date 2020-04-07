@@ -49,6 +49,10 @@ MainWindow::MainWindow(QWidget *parent)
     pointMaps["cpc10"] = cpcPt10;
     simuPage = new ClientSimuPage();
     settingWindow = new ClientSettingWindow();
+    settingPage = new SettingPage(connList);
+
+    connect(server, SIGNAL(sigOnClientData(QString, QMap<QString,QString>)),
+            settingPage, SLOT(onClientData(QString, QMap<QString,QString>)));
 }
 
 MainWindow::~MainWindow()
@@ -110,29 +114,6 @@ void MainWindow::onAutoTimeout()
 
 void MainWindow::onTimerTimeout()
 {
-
-//    static int cnt = -1;
-//    if(cnt < 600)
-//    {
-//        pt.prepend(QRandomGenerator::global()->bounded(1.00));
-//        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
-//        cnt ++;
-//    }
-//    else
-//    {
-//        cnt ++;
-//        pt.prepend(QRandomGenerator::global()->bounded(1.00));
-//        pt1.prepend(QRandomGenerator::global()->bounded(1.00));
-//        pt.removeAt(pt.size());
-//        pt1.removeAt(pt1.size());
-//    }
-//    cpc1slineSeries->clear();
-//    cpc10slineSeries->clear();
-//    for(int i = 0; i < pt.size(); i ++)
-//    {
-//        cpc1slineSeries->append(i, pt[i]);
-//        cpc10slineSeries->append(i, pt1[i]);
-//    }
     qDebug()<<"request cpc data";
     QList<QString> getChannels;
     getChannels << "25";
@@ -225,7 +206,8 @@ void MainWindow::on_startBtn_clicked()
 
 void MainWindow::on_menuBtn_clicked()
 {
-    settingWindow->show();
+//    settingWindow->show();
+    settingPage->show();
 }
 
 void MainWindow::on_startCalibBtn_clicked()
@@ -351,7 +333,7 @@ void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 
     if(client == "cpc")
     {
-        if(data.contains("25"))
+        if(data.contains("25") && data.size() == 1)
         {
             double value = data["25"].toDouble();
             static QList<double> tmpPt;
@@ -421,7 +403,7 @@ void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 
     if(client == "test")
     {
-        if(data.contains("25"))
+        if(data.contains("25") && data.size() == 1)
         {
             double value = data["25"].toDouble();
             qDebug()<<"on testDev data";

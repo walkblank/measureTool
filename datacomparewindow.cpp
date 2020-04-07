@@ -79,16 +79,16 @@ void DatacompareWindow::on_saveBtn_clicked()
 
 void DatacompareWindow::on_printBtn_clicked()
 {
-    QList<QStandardItem*> rowItems;
-    for(int i = 0; i < 20; i ++)
-    {
-        rowItems.clear();
-        rowItems << new QStandardItem("99999")
-                 << new QStandardItem("0.5")
-                 << new QStandardItem("0.3")
-                 << new QStandardItem("0.2");
-        model->appendRow(rowItems);
-    }
+//    QList<QStandardItem*> rowItems;
+//    for(int i = 0; i < 20; i ++)
+//    {
+//        rowItems.clear();
+//        rowItems << new QStandardItem("99999")
+//                 << new QStandardItem("0.5")
+//                 << new QStandardItem("0.3")
+//                 << new QStandardItem("0.2");
+//        model->appendRow(rowItems);
+//    }
     int row = model->rowCount();
     if(row <= 0)
         return;
@@ -151,7 +151,7 @@ void DatacompareWindow::on_printBtn_clicked()
     QPrinter printer;
     //    printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFormat(QPrinter::NativeFormat);
-    printer.setOutputFileName("test.pdf");
+//    printer.setOutputFileName("test.pdf");
 
 
     QPrintPreviewDialog preview(&printer);
