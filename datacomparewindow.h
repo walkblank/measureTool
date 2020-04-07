@@ -2,6 +2,8 @@
 #define DATACOMPAREWINDOW_H
 
 #include <QWidget>
+#include <QPrintPreviewDialog>
+#include <QPrinter>
 
 #include "datacomparemodel.h"
 
@@ -21,14 +23,14 @@ public:
 private slots:
 
     void on_setThresholdBtn_clicked();
-
     void on_saveBtn_clicked();
-
     void on_printBtn_clicked();
+    void printView(QPrinter *);
 
 private:
     Ui::DatacompareWindow *ui;
     DatacompareModel *model;
+    QStringList html;
 };
 
 #endif // DATACOMPAREWINDOW_H

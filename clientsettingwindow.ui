@@ -25,6 +25,9 @@
         <string notr="true">image: url(:/image/smps.png);</string>
        </property>
        <widget class="QLineEdit" name="lineEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>60</x>
@@ -35,6 +38,9 @@
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(85, 255, 0);</string>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </widget>

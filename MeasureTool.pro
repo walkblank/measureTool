@@ -2,6 +2,7 @@ QT       += core gui
 QT       += charts
 QT       += network
 QT       += xlsx
+QT       += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,7 +32,8 @@ SOURCES += \
     datacomparewindow.cpp \
     main.cpp \
     mainwindow.cpp \
-    measureserver.cpp
+    measureserver.cpp \
+    settingpage.cpp
 
 HEADERS += \
     calibclient.h \
@@ -40,13 +42,15 @@ HEADERS += \
     datacomparemodel.h \
     datacomparewindow.h \
     mainwindow.h \
-    measureserver.h
+    measureserver.h \
+    settingpage.h
 
 FORMS += \
     clientsettingwindow.ui \
     clientsimupage.ui \
     datacomparewindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    settingpage.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
