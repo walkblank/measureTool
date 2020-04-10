@@ -108,8 +108,10 @@ void MainWindow::onAutoTimeout()
 {
     QList<QString> channels;
     channels << "25";
-    connList[addrList["cpc"]]->getValue(channels);
-    connList[addrList["test"]]->getValue(channels);
+    if(connList.contains(addrList["cpc"]))
+        connList[addrList["cpc"]]->getValue(channels);
+    if(connList.contains(addrList["test"]))
+        connList[addrList["test"]]->getValue(channels);
 }
 
 void MainWindow::onTimerTimeout()
@@ -118,7 +120,8 @@ void MainWindow::onTimerTimeout()
     QList<QString> getChannels;
     getChannels << "25";
     connList[addrList["cpc"]]->getValue(getChannels);
-    connList[addrList["test"]]->getValue(getChannels);
+    if(connList.contains(addrList["test"]))
+        connList[addrList["test"]]->getValue(getChannels);
     getChannels.clear();
     getChannels << "21" << "26" << "27" << "28";
     connList[addrList["smps"]]->getValue(getChannels);
@@ -229,7 +232,13 @@ void MainWindow::on_startCalibBtn_clicked()
     if(connList.contains(addrList["cpc"]))
     {
         connList[addrList["cpc"]]->enterClassifierMode(ui->setMeter->text());
+    }
+    if(connList.contains(addrList["smps"]))
+    {
         connList[addrList["smps"]]->enterClassifierMode(ui->setMeter->text());
+    }
+    if(connList.contains(addrList["test"]))
+    {
         connList[addrList["test"]]->enterClassifierMode(ui->setMeter->text());
     }
 }
@@ -448,7 +457,8 @@ void MainWindow::onClientRet(QString type, QString ret, QMap<QString,QString> se
             enterClsDevs.append(type);
     }
 
-    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps") && enterClsDevs.contains("test"))
+//    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps") && enterClsDevs.contains("test"))
+    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps"))
     {
         enterClsDevs.clear();
         timer->start(1000);
