@@ -31,6 +31,7 @@ SOURCES += \
     datacomparemodel.cpp \
     datacomparewindow.cpp \
     main.cpp \
+    mainstartup.cpp \
     mainwindow.cpp \
     measureserver.cpp \
     settingpage.cpp
@@ -41,6 +42,7 @@ HEADERS += \
     clientsimupage.h \
     datacomparemodel.h \
     datacomparewindow.h \
+    mainstartup.h \
     mainwindow.h \
     measureserver.h \
     settingpage.h
@@ -49,6 +51,7 @@ FORMS += \
     clientsettingwindow.ui \
     clientsimupage.ui \
     datacomparewindow.ui \
+    mainstartup.ui \
     mainwindow.ui \
     settingpage.ui
 
