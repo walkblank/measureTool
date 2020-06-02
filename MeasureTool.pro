@@ -34,6 +34,7 @@ SOURCES += \
     mainstartup.cpp \
     mainwindow.cpp \
     measureserver.cpp \
+    midesettingpage.cpp \
     settingpage.cpp
 
 HEADERS += \
@@ -45,6 +46,7 @@ HEADERS += \
     mainstartup.h \
     mainwindow.h \
     measureserver.h \
+    midesettingpage.h \
     settingpage.h
 
 FORMS += \
@@ -53,6 +55,7 @@ FORMS += \
     datacomparewindow.ui \
     mainstartup.ui \
     mainwindow.ui \
+    midesettingpage.ui \
     settingpage.ui
 
 # Default rules for deployment.
