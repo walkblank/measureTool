@@ -9,8 +9,17 @@ MainStartUp::MainStartUp(QWidget *parent) :
     setFixedSize(width(), height());
     cpc2Window = new MainWindow(this);
     cpc1Window = new MainWindow(this);
+    mide1Page = new MideSettingPage("MD19-3E@1");
+    mide2Page = new MideSettingPage("MD19-3E@2");
+
+    mdClient1 = new Md19Client();
+    connect(mdClient1, SIGNAL(connected()), this, SLOT(onMdClientConnect()));
 }
 
+void MainStartUp::onMdClientConnect()
+{
+    qDebug()<<"connect";
+}
 void MainStartUp::showEvent(QShowEvent *evt)
 {
    Q_UNUSED(evt)
@@ -22,12 +31,13 @@ MainStartUp::~MainStartUp()
 
 void MainStartUp::on_openMd1Btn_clicked()
 {
-
+    mdClient1->connectToHost("192.168.199.147", 3320);
+//    mide1Page->show();
 }
 
 void MainStartUp::on_openMd2Btn_clicked()
 {
-
+    mide2Page->show();
 }
 
 void MainStartUp::on_openCpc1Btn_clicked()

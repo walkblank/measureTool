@@ -12,7 +12,7 @@ class MideSettingPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit MideSettingPage(QWidget *parent = nullptr);
+    explicit MideSettingPage(QString dev, QWidget *parent = nullptr);
     ~MideSettingPage();
 
 private:

@@ -33,6 +33,7 @@ SOURCES += \
     main.cpp \
     mainstartup.cpp \
     mainwindow.cpp \
+    md19client.cpp \
     measureserver.cpp \
     midesettingpage.cpp \
     settingpage.cpp
@@ -45,6 +46,7 @@ HEADERS += \
     datacomparewindow.h \
     mainstartup.h \
     mainwindow.h \
+    md19client.h \
     measureserver.h \
     midesettingpage.h \
     settingpage.h

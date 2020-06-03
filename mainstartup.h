@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "mainwindow.h"
+#include "midesettingpage.h"
+#include "md19client.h"
 
 namespace Ui {
 class MainStartUp;
@@ -30,11 +32,15 @@ private slots:
 
     void on_openSmpsBtn_clicked();
 
+    void onMdClientConnect();
+
 private:
     Ui::MainStartUp *ui;
 
-    MainWindow *cpc2Window;
-    MainWindow *cpc1Window;
+    MainWindow *cpc1Window, *cpc2Window;
+    MideSettingPage *mide1Page, *mide2Page;
+
+    Md19Client *mdClient1, mdClient2;
 };
 
 #endif // MAINSTARTUP_H
