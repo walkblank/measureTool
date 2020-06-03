@@ -27,9 +27,9 @@ border-image: url(:/image/startUp.png);
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>130</y>
-      <width>161</width>
-      <height>41</height>
+      <y>140</y>
+      <width>151</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -57,7 +57,7 @@ border-image: url(:/image/startUp.png);
      <item>
       <widget class="QLabel" name="label">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>稀释比:</string>
@@ -79,9 +79,9 @@ border-image: url(:/image/startUp.png);
    <widget class="QFrame" name="frame_2">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>310</x>
       <y>370</y>
-      <width>151</width>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -101,13 +101,16 @@ border-image: url(:/image/startUp.png);
      <property name="topMargin">
       <number>0</number>
      </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
      <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
       <widget class="QLabel" name="label_2">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>稀释比:</string>
@@ -146,9 +149,9 @@ border-image: url(:/image/startUp.png);
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>400</y>
+      <y>410</y>
       <width>111</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -307,7 +310,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_3">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Flow rate:</string>
@@ -332,7 +335,7 @@ background-color: rgb(138, 138, 138);</string>
       <x>890</x>
       <y>290</y>
       <width>161</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -357,7 +360,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_4">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Cn:</string>
@@ -377,7 +380,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_5">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>P/cm3</string>
@@ -420,7 +423,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_6">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Flow rate:</string>
@@ -445,7 +448,7 @@ background-color: rgb(138, 138, 138);</string>
       <x>970</x>
       <y>440</y>
       <width>161</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -470,7 +473,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_7">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Cn:</string>
@@ -490,7 +493,7 @@ background-color: rgb(138, 138, 138);</string>
      <item>
       <widget class="QLabel" name="label_8">
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>P/cm3</string>
