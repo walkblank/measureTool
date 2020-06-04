@@ -10,6 +10,9 @@ class Md19Client : public QTcpSocket
 
 public:
     explicit Md19Client(QObject *parent = nullptr);
+    int writeReg(char cmd, QString regAddress, int regNum, char *writeData, int dataLen);
+    int readReg(char cmd, QString regAddress, int regNum);
+    void connectDev();
 };
 
 #endif // MD19CLIENT_H
