@@ -10,7 +10,8 @@
 #include "clientsimupage.h"
 #include "datacomparewindow.h"
 #include "clientsettingwindow.h"
-#include  "settingpage.h"
+#include "settingpage.h"
+#include "cpcstatuspage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,7 +22,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QString dev, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -46,9 +47,12 @@ private slots:
 
     void on_tableBtn_clicked();
 
+    void on_cpcConnBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     MeasureServer *server;
+    CalibClient *cpcClient;
     QChart  *m_chart;
     QChartView *m_chartView;
 
@@ -68,13 +72,13 @@ private:
     QMap<QString, QList<qreal>> pointMaps;
     QList<qreal> cpcPt1;
     QList<qreal> cpcPt10;
-    QList<qreal> cpcTest;
+//    QList<qreal> cpcTest;
 
     QSettings *settings;
 
-    QMap<QString, QString> addrList;
-    QMap<QString, CalibClient*> connList;
-    QMap<QString, QLineEdit*> addrLineList;
+//    QMap<QString, QString> addrList;
+//    QMap<QString, CalibClient*> connList;
+//    QMap<QString, QLineEdit*> addrLineList;
 
     QList<QString> enterClsDevs;
     QList<QString> enterAutoDevs;
@@ -91,6 +95,7 @@ private:
     DatacompareWindow *compareWindow;
     ClientSettingWindow *settingWindow;
     SettingPage *settingPage;
+    CpcStatusPage *stPage;
 
 private:
     void initChartsView();

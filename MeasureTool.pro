@@ -28,6 +28,7 @@ SOURCES += \
     calibclient.cpp \
     clientsettingwindow.cpp \
     clientsimupage.cpp \
+    cpcstatuspage.cpp \
     datacomparemodel.cpp \
     datacomparewindow.cpp \
     main.cpp \
@@ -36,12 +37,14 @@ SOURCES += \
     md19client.cpp \
     measureserver.cpp \
     midesettingpage.cpp \
-    settingpage.cpp
+    settingpage.cpp \
+    smpsstatuspage.cpp
 
 HEADERS += \
     calibclient.h \
     clientsettingwindow.h \
     clientsimupage.h \
+    cpcstatuspage.h \
     datacomparemodel.h \
     datacomparewindow.h \
     mainstartup.h \
@@ -49,16 +52,19 @@ HEADERS += \
     md19client.h \
     measureserver.h \
     midesettingpage.h \
-    settingpage.h
+    settingpage.h \
+    smpsstatuspage.h
 
 FORMS += \
     clientsettingwindow.ui \
     clientsimupage.ui \
+    cpcstatuspage.ui \
     datacomparewindow.ui \
     mainstartup.ui \
     mainwindow.ui \
     midesettingpage.ui \
-    settingpage.ui
+    settingpage.ui \
+    smpsstatuspage.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

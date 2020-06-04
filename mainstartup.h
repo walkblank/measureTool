@@ -40,7 +40,7 @@ private:
     MainWindow *cpc1Window, *cpc2Window;
     MideSettingPage *mide1Page, *mide2Page;
 
-    Md19Client *mdClient1, mdClient2;
+    Md19Client *mdClient1, *mdClient2;
 };
 
 #endif // MAINSTARTUP_H
