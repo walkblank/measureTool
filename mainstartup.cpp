@@ -10,13 +10,20 @@ MainStartUp::MainStartUp(QWidget *parent) :
 
     cpc1Window = new MainWindow("CPC1");
     cpc2Window = new MainWindow("CPC2");
-    mide1Page = new MideSettingPage("MD19-3E@1");
-    mide2Page = new MideSettingPage("MD19-3E@2");
+//<<<<<<< HEAD
+//    mide1Page = new MideSettingPage("MD19-3E@1");
+//    mide2Page = new MideSettingPage("MD19-3E@2");
     smpsPage = new SmpsStatusPage();
 
+//=======
+//>>>>>>> 253787a4a2339f53562d0921ed245b861a016d22
 
     mdClient1 = new Md19Client();
     mdClient2 = new Md19Client();
+
+    mide1Page = new MideSettingPage("MD19-3E@1");
+    mide2Page = new MideSettingPage("MD19-3E@2");
+
     connect(mdClient1, SIGNAL(connected()), this, SLOT(onMdClientConnect()));
 }
 
@@ -35,23 +42,34 @@ MainStartUp::~MainStartUp()
 
 void MainStartUp::on_openMd1Btn_clicked()
 {
-//    mdClient1->connectToHost("192.168.199.147", 3320);
-    mide1Page->show();
+    if(mide1Page->isVisible())
+        mide1Page->raise();
+    else
+        mide1Page->show();
 }
 
 void MainStartUp::on_openMd2Btn_clicked()
 {
-    mide2Page->show();
+    if(mide2Page->isVisible())
+        mide2Page->raise();
+    else
+        mide2Page->show();
 }
 
 void MainStartUp::on_openCpc1Btn_clicked()
 {
-    cpc1Window->show();
+    if(cpc1Window->isVisible())
+        cpc1Window->raise();
+    else
+        cpc1Window->show();
 }
 
 void MainStartUp::on_openCpc2Btn_clicked()
 {
-    cpc2Window->show();
+    if(cpc2Window->isVisible())
+        cpc2Window->raise();
+    else
+        cpc2Window->show();
 }
 
 void MainStartUp::on_openSmpsBtn_clicked()
