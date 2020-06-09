@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "midesettingpage.h"
 #include "md19client.h"
+#include "smpsstatuspage.h"
 
 namespace Ui {
 class MainStartUp;
@@ -39,6 +40,7 @@ private:
 
     MainWindow *cpc1Window, *cpc2Window;
     MideSettingPage *mide1Page, *mide2Page;
+    SmpsStatusPage *smpsPage;
 
     Md19Client *mdClient1, *mdClient2;
 };

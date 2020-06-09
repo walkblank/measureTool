@@ -12,6 +12,8 @@ MainStartUp::MainStartUp(QWidget *parent) :
     cpc2Window = new MainWindow("CPC2");
     mide1Page = new MideSettingPage("MD19-3E@1");
     mide2Page = new MideSettingPage("MD19-3E@2");
+    smpsPage = new SmpsStatusPage();
+
 
     mdClient1 = new Md19Client();
     mdClient2 = new Md19Client();
@@ -54,5 +56,5 @@ void MainStartUp::on_openCpc2Btn_clicked()
 
 void MainStartUp::on_openSmpsBtn_clicked()
 {
-
+    smpsPage->show();
 }
