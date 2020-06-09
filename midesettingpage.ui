@@ -17,14 +17,14 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="3">
-      <widget class="QLineEdit" name="lineEdit_4">
+      <widget class="QLineEdit" name="xsValue">
        <property name="enabled">
         <bool>false</bool>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_5">
+      <widget class="QLineEdit" name="curTemp">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -52,7 +52,7 @@
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="port"/>
      </item>
      <item row="2" column="2">
       <widget class="QLabel" name="label_6">
@@ -62,7 +62,7 @@
       </widget>
      </item>
      <item row="2" column="3">
-      <widget class="QLineEdit" name="lineEdit_6">
+      <widget class="QLineEdit" name="lllValue">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -83,24 +83,27 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="ip">
        <property name="enabled">
         <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 127);</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_3">
+      <widget class="QLineEdit" name="devStatus">
        <property name="enabled">
         <bool>false</bool>
        </property>
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QLineEdit" name="lineEdit_7"/>
+      <widget class="QLineEdit" name="tempValue"/>
      </item>
      <item row="3" column="3">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="setTempBtn">
        <property name="text">
         <string>设置温度</string>
        </property>
@@ -124,14 +127,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="saveBtn">
        <property name="text">
-        <string/>
+        <string>保存地址</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="connBtn">
        <property name="text">
         <string>连接设备</string>
        </property>

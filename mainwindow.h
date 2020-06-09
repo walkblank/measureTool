@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QString dev, QWidget *parent = nullptr);
+    void setClient(CalibClient *client) { cpcClient = client;}
     ~MainWindow();
 
 private slots:
@@ -51,7 +52,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    MeasureServer *server;
+//    MeasureServer *server;
     CalibClient *cpcClient;
     QChart  *m_chart;
     QChartView *m_chartView;
@@ -62,7 +63,7 @@ private:
 
     QLineSeries *cpc1slineSeries;
     QLineSeries *cpc10slineSeries;
-    QLineSeries *testDevLineSeries;
+//    QLineSeries *testDevLineSeries;
 
     ClientSimuPage *simuPage;
     QLineSeries *upperCalib;

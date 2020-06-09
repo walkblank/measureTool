@@ -6,6 +6,7 @@
 #include "midesettingpage.h"
 #include "md19client.h"
 #include "smpsstatuspage.h"
+#include "calibclient.h"
 
 namespace Ui {
 class MainStartUp;
@@ -35,6 +36,10 @@ private slots:
 
     void onMdClientConnect();
 
+    void on_startMd1Btn_clicked();
+
+    void on_startMd2Btn_clicked();
+
 private:
     Ui::MainStartUp *ui;
 
@@ -43,6 +48,7 @@ private:
     SmpsStatusPage *smpsPage;
 
     Md19Client *mdClient1, *mdClient2;
+    CalibClient *cpc1Client, *cpc2Client;
 };
 
 #endif // MAINSTARTUP_H

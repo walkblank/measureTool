@@ -195,8 +195,6 @@ void MainWindow::on_startBtn_clicked()
 
 void MainWindow::on_menuBtn_clicked()
 {
-//    settingWindow->show();
-//    settingPage->show();
     stPage->show();
 }
 
@@ -489,5 +487,5 @@ void MainWindow::on_tableBtn_clicked()
 
 void MainWindow::on_cpcConnBtn_clicked()
 {
-
+    cpcClient->connectToHost(ui->cpcAddr->text(),  ui->listenPort->text().toUInt());
 }
