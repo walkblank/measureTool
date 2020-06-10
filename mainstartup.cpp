@@ -25,10 +25,18 @@ MainStartUp::MainStartUp(QWidget *parent) :
     connect(mdClient1, SIGNAL(connected()), this, SLOT(onMdClientConnect()));
     connect(mdClient2, SIGNAL(connected()), this, SLOT(onMdClientConnect()));
 
-    mide1Page = new MideSettingPage("MD19-3E@1");
+    mide1Page = new MideSettingPage("MD19_3E-1");
     mide1Page->setClient(mdClient1);
-    mide2Page = new MideSettingPage("MD19-3E@2");
+    mide2Page = new MideSettingPage("MD19_3E-2");
     mide2Page->setClient(mdClient2);
+
+    connect(mdClient1, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
+    connect(mdClient2, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
+
+    connect(mide1Page, SIGNAL(sigXishiVal(QString)), this, SLOT(onXishiValSig(QString)));
+    connect(mide2Page, SIGNAL(sigXishiVal(QString)), this, SLOT(onXishiValSig(QString)));
+
+    mdStartBtns << ui->startMd1Btn << ui->startMd2Btn;
 }
 
 void MainStartUp::onMdClientConnect()
@@ -95,17 +103,50 @@ void MainStartUp::on_startMd1Btn_clicked()
         QMessageBox::warning(this, "提示", "请先连接设备", QMessageBox::Ok);
         return;
     }
-
-    char data[8];
-    memset(data, 0, 8);
-    mdClient1->writeRegN(1, 1, 2, 4, data, 8);
+    if(mdClient1->getStart())
+        mdClient1->stopDev();
+    else
+        mdClient1->startDev();
 }
 
 void MainStartUp::on_startMd2Btn_clicked()
 {
-    if(mdClient1->state() != QAbstractSocket::ConnectedState)
+    if(mdClient2->state() != QAbstractSocket::ConnectedState)
     {
         QMessageBox::warning(this, "提示", "请先连接设备", QMessageBox::Ok);
         return;
+    }
+    if(mdClient2->getStart())
+        mdClient2->stopDev();
+    else
+        mdClient2->startDev();
+}
+
+void MainStartUp::onXishiValSig(QString val)
+{
+    MideSettingPage *page = static_cast<MideSettingPage *>(sender());
+    if(page == mide1Page)
+        ui->md1DilutionVal->setText(val);
+    else
+        ui->md2DilutionVal->setText(val);
+}
+
+void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1)
+{
+    int idx = 0;
+    Md19Client *client = static_cast<Md19Client*>(sender());
+    if(client == mdClient2)
+        idx = 1;
+    qDebug()<< "on sigData" << cmd;
+    if(cmd == 0x5)
+    {
+        if(var.toBool())
+        {
+            mdStartBtns[idx]->setText("泵 停止");
+        }
+        else
+        {
+            mdStartBtns[idx]->setText("泵 启动");
+        }
     }
 }

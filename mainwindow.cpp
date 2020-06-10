@@ -46,6 +46,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setClient(CalibClient *client)
+{
+    cpcClient = client;
+    connect(cpcClient, SIGNAL(sigConnected()), this, SLOT(onConnected()));
+    connect(cpcClient, SIGNAL(sigDisConnected()), this, SLOT(onDisconnected()));
+}
+
 void MainWindow::getLocalIpAddr()
 {
 //    QHostInfo info = QHostInfo::fromName(QHostInfo::localHostName());
@@ -488,4 +495,14 @@ void MainWindow::on_tableBtn_clicked()
 void MainWindow::on_cpcConnBtn_clicked()
 {
     cpcClient->connectToHost(ui->cpcAddr->text(),  ui->listenPort->text().toUInt());
+}
+
+void MainWindow::onConnected()
+{
+    qDebug()<< "on connected";
+}
+
+void MainWindow::onDisconnected()
+{
+    qDebug()<< "on disconnect";
 }

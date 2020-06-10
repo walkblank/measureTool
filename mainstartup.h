@@ -40,6 +40,9 @@ private slots:
 
     void on_startMd2Btn_clicked();
 
+    void onXishiValSig(QString val);
+    void onSigData(int cmd, QVariant var, QVariant var1);
+
 private:
     Ui::MainStartUp *ui;
 
@@ -49,6 +52,8 @@ private:
 
     Md19Client *mdClient1, *mdClient2;
     CalibClient *cpc1Client, *cpc2Client;
+
+    QList<QPushButton *> mdStartBtns;
 };
 
 #endif // MAINSTARTUP_H

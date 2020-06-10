@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QString dev, QWidget *parent = nullptr);
-    void setClient(CalibClient *client) { cpcClient = client;}
+    void setClient(CalibClient *client);
     ~MainWindow();
 
 private slots:
@@ -49,6 +49,9 @@ private slots:
     void on_tableBtn_clicked();
 
     void on_cpcConnBtn_clicked();
+
+    void onConnected();
+    void onDisconnected();
 
 private:
     Ui::MainWindow *ui;

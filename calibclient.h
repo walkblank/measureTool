@@ -29,13 +29,18 @@ public:
     void connectToHost(QString host, int port);
     void disconnect();
     void close();
+    int  state();
 
 signals:
     void sigReadData(QString type, QMap<QString,QString> values);
     void sigSetRet(QString type, QString ret, QMap<QString,QString> setValues);
+    void sigConnected();
+    void sigDisConnected();
 
 private slots:
     void onDataReady();
+    void onConnected();
+    void onDisConnected();
 
 private:
     QTcpSocket *sock;

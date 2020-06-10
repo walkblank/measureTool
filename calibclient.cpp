@@ -2,6 +2,10 @@
 
 CalibClient::CalibClient()
 {
+    sock = new QTcpSocket(this);
+    connect(sock, SIGNAL(connected()), this, SLOT(onConnected()));
+    connect(sock, SIGNAL(disconnected()), this, SLOT(onDisConnected()));
+    connect(sock, SIGNAL(readyRead()), this, SLOT(onDataReady()));
 }
 
 CalibClient::CalibClient(QString s)
@@ -21,6 +25,11 @@ void CalibClient::AttachSocket(QTcpSocket *sock)
 void CalibClient::close()
 {
     return sock->close();
+}
+
+int CalibClient::state()
+{
+    return sock->state();
 }
 
 void CalibClient::connectToHost(QString host, int port)
@@ -73,6 +82,16 @@ int CalibClient::setValue(QMap<QString,QString> valueSet)
     qDebug()<<"set val" << sendStr;
     sendValueSet = valueSet;
     return sock->write(sendStr.toStdString().c_str());
+}
+
+void CalibClient::onConnected()
+{
+    emit sigConnected();
+}
+
+void CalibClient::onDisConnected()
+{
+    emit sigDisConnected();
 }
 
 void CalibClient::onDataReady()
@@ -193,6 +212,6 @@ void CalibClient::simuDataProcess()
             QString sendStr = QString("<sendVals%1>07\r\n").arg(sendValList.join(";"));
             sock->write(sendStr.toStdString().c_str());
         }
-        data = data.mid(secEndpos+2, -1);
+        strLeft = data.mid(secEndpos+2, -1);
     }
 }

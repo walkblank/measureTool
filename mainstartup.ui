@@ -142,7 +142,7 @@ border-image: url(:/image/startUp.png);
      <string notr="true">background-color: rgb(85, 170, 127);</string>
     </property>
     <property name="text">
-     <string>泵- 启/停</string>
+     <string>泵 启动</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startMd1Btn">
@@ -158,7 +158,7 @@ border-image: url(:/image/startUp.png);
      <string notr="true">background-color: rgb(85, 170, 127);</string>
     </property>
     <property name="text">
-     <string>泵- 启/停</string>
+     <string>泵 启动</string>
     </property>
    </widget>
    <widget class="QPushButton" name="openMd2Btn">
