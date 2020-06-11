@@ -72,6 +72,10 @@ void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1)
         ui->curTemp->setText(var.toString());
         ui->lllValue->setText(var1.toString());
     }
+    else if(cmd == 0x5)
+    {
+        ui->devStatus->setText(var.toBool() ? "泵启动" : "泵停止");
+    }
 }
 void MideSettingPage::on_setTempBtn_clicked()
 {

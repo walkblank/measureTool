@@ -11,6 +11,7 @@ class MeasureServer : public QObject
     Q_OBJECT
 public:
     MeasureServer(QMap<QString, CalibClient*> &connList, int port =11231);
+    MeasureServer(int port);
     void setListenPort(int port);
     void setClientMap(QMap<QString,QString>);
 
@@ -27,7 +28,7 @@ private slots:
 private:
     QTcpServer *serverSocket;
     int listenPort;
-    QMap<QString, CalibClient*> &clientList;
+    QMap<QString, CalibClient*> clientList;
     QMap<QString, QString> clientMap;
 };
 

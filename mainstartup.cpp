@@ -37,6 +37,8 @@ MainStartUp::MainStartUp(QWidget *parent) :
     connect(mide2Page, SIGNAL(sigXishiVal(QString)), this, SLOT(onXishiValSig(QString)));
 
     mdStartBtns << ui->startMd1Btn << ui->startMd2Btn;
+
+    server = new MeasureServer(3320);
 }
 
 void MainStartUp::onMdClientConnect()
@@ -141,12 +143,8 @@ void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1)
     if(cmd == 0x5)
     {
         if(var.toBool())
-        {
             mdStartBtns[idx]->setText("泵 停止");
-        }
         else
-        {
             mdStartBtns[idx]->setText("泵 启动");
-        }
     }
 }

@@ -73,6 +73,7 @@ int CalibClient::getValue(QList<QString> vals)
 
 int CalibClient::setValue(QMap<QString,QString> valueSet)
 {
+    int sendLen;
     setMode(valueSet.keys());
     QStringList valSet;
     QString sendStr;
@@ -81,7 +82,9 @@ int CalibClient::setValue(QMap<QString,QString> valueSet)
     sendStr = QString("<sendVal%1>\r\n").arg(valSet.join(";"));
     qDebug()<<"set val" << sendStr;
     sendValueSet = valueSet;
-    return sock->write(sendStr.toStdString().c_str());
+    sendLen = sock->write(sendStr.toStdString().c_str());
+    qDebug()<<"sendLen" << sendLen;
+    return sendLen;
 }
 
 void CalibClient::onConnected()
@@ -112,6 +115,7 @@ void CalibClient::commDataProcess()
     QString data = sock->readAll();
     qDebug()<<"commRecv" << data;
     data.prepend(strLeft);
+    strLeft.clear();
 
     while(data.contains("\r\n"))
     {
@@ -148,6 +152,7 @@ void CalibClient::commDataProcess()
         }
         data = data.mid(secEndpos+2, -1);
     }
+    strLeft = data;
 }
 
 void CalibClient::simuDataProcess()
@@ -212,6 +217,7 @@ void CalibClient::simuDataProcess()
             QString sendStr = QString("<sendVals%1>07\r\n").arg(sendValList.join(";"));
             sock->write(sendStr.toStdString().c_str());
         }
-        strLeft = data.mid(secEndpos+2, -1);
+
+        data = data.mid(secEndpos+2, -1);
     }
 }

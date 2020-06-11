@@ -9,12 +9,10 @@ MainWindow::MainWindow(QString dev, QWidget *parent)
     , ui(new Ui::MainWindow), m_chart(new QChart())
 {
     ui->setupUi(this);
-
-    int port = 11231;
+    deviceName = dev;
     setWindowTitle(QString("%1设备界面").arg(dev));
     settings = new QSettings("setting.ini", QSettings::IniFormat);
-    if(settings->contains("port"))
-        port = settings->value("port").toUInt();
+
     timer = new QTimer();
     autoTimer = new QTimer();
 
@@ -24,21 +22,11 @@ MainWindow::MainWindow(QString dev, QWidget *parent)
     initChartsView();
     loadSettings();
 
-//    model = new DatacompareModel();
-//    compareWindow = new DatacompareWindow();
-//    compareWindow->setWindowTitle("Compare Table");
-//    compareWindow->setModel(model);
-
     pointMaps["cpc"] = cpcPt1;
-//    pointMaps["test"] = cpcTest;
     pointMaps["cpc10"] = cpcPt10;
     simuPage = new ClientSimuPage();
     settingWindow = new ClientSettingWindow();
     stPage = new CpcStatusPage(dev);
-//    settingPage = new SettingPage(connList);
-
-//    connect(server, SIGNAL(sigOnClientData(QString, QMap<QString,QString>)),
-//            settingPage, SLOT(onClientData(QString, QMap<QString,QString>)));
 }
 
 MainWindow::~MainWindow()
@@ -51,21 +39,12 @@ void MainWindow::setClient(CalibClient *client)
     cpcClient = client;
     connect(cpcClient, SIGNAL(sigConnected()), this, SLOT(onConnected()));
     connect(cpcClient, SIGNAL(sigDisConnected()), this, SLOT(onDisconnected()));
+    connect(cpcClient, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
+            this, SLOT(onClientData(QString, QMap<QString,QString>)));
+    connect(cpcClient, SIGNAL(sigSetRet(QString,QString,QMap<QString,QString>))
+            ,this, SLOT(onClientRet(QString,QString, QMap<QString,QString>)));
 }
 
-void MainWindow::getLocalIpAddr()
-{
-//    QHostInfo info = QHostInfo::fromName(QHostInfo::localHostName());
-//    qDebug()<< QHostInfo::localHostName();
-//    foreach(QHostAddress addr, info.addresses())
-//    {
-//        if(addr.protocol() == QAbstractSocket::IPv4Protocol)
-//        {
-//            qDebug()<<addr.toString();
-//            ui->localAddrList->addItem(addr.toString());
-//        }
-//    }
-}
 
 bool MainWindow::checkIp(QString ip)
 {
@@ -78,33 +57,25 @@ bool MainWindow::checkIp(QString ip)
 
 void MainWindow::loadSettings()
 {
-    getLocalIpAddr();
-    if(settings->contains("upper"))
-        ui->upperValue->setText(settings->value("upper").toString());
-    if(settings->contains("lower"))
-        ui->lowerValue->setText(settings->value("lower").toString());
-    if(settings->contains("cpcaddr"))
-        ui->cpcAddr->setText(settings->value("cpcaddr").toString());
-//    if(settings->contains("smpsaddr"))
-//        ui->smpsAddr->setText(settings->value("smpsaddr").toString());
-//    if(settings->contains("testaddr"))
-//        ui->testDevAddr->setText(settings->value("testaddr").toString());
-    if(settings->contains("port"))
-        ui->listenPort->setText(settings->value("port").toString());
-    if(settings->contains("diameter"))
-        ui->setMeter->setText(settings->value("diameter").toString());
-    if(settings->contains("avtime"))
-        ui->averTime->setText(settings->value("avtime").toString());
+    if(settings->contains(QString("%1_upper").arg(deviceName)))
+        ui->upperValue->setText(settings->value(QString("%1_upper").arg(deviceName)).toString());
+    if(settings->contains(QString("%1_lower").arg(deviceName)))
+        ui->lowerValue->setText(settings->value(QString("%1_lower").arg(deviceName)).toString());
+    if(settings->contains(QString("%1_cpcaddr").arg(deviceName)))
+        ui->cpcAddr->setText(settings->value(QString("%1_cpcaddr").arg(deviceName)).toString());
+    if(settings->contains(QString("%1_port").arg(deviceName)))
+        ui->listenPort->setText(settings->value(QString("%1_port").arg(deviceName)).toString());
+    if(settings->contains(QString("%1_diameter").arg(deviceName)))
+        ui->setMeter->setText(settings->value(QString("%1_diameter").arg(deviceName)).toString());
+    if(settings->contains(QString("%1_avtime").arg(deviceName)))
+        ui->averTime->setText(settings->value(QString("%1_avtime").arg(deviceName)).toString());
 }
 
 void MainWindow::onAutoTimeout()
 {
     QList<QString> channels;
-    channels << "25";
-//    if(connList.contains(addrList["cpc"]))
-//        connList[addrList["cpc"]]->getValue(channels);
-//    if(connList.contains(addrList["test"]))
-//        connList[addrList["test"]]->getValue(channels);
+    channels << "27";
+    cpcClient->getValue(channels);
 }
 
 void MainWindow::onTimerTimeout()
@@ -114,7 +85,7 @@ void MainWindow::onTimerTimeout()
     getChannels << "25";
 //    connList[addrList["cpc"]]->getValue(getChannels);
 //    if(connList.contains(addrList["test"]))
-//        connList[addrList["test"]]->getValue(getChannels);
+        cpcClient->getValue(getChannels);
     getChannels.clear();
     getChannels << "21" << "26" << "27" << "28";
 //    connList[addrList["smps"]]->getValue(getChannels);
@@ -223,7 +194,7 @@ void MainWindow::on_startCalibBtn_clicked()
 
 //    if(connList.contains(addrList["cpc"]))
 //    {
-//        connList[addrList["cpc"]]->enterClassifierMode(ui->setMeter->text());
+        cpcClient->enterClassifierMode(ui->setMeter->text());
 //    }
 //    if(connList.contains(addrList["smps"]))
 //    {
@@ -245,7 +216,7 @@ void MainWindow::on_upperValue_textChanged(const QString &arg1)
         upperCalib->append(0, v);
         upperCalib->append(600, v);
     }
-    settings->setValue("upper", v);
+    settings->setValue(QString("%1_upper").arg(deviceName), v);
 
 }
 
@@ -259,67 +230,35 @@ void MainWindow::on_lowerValue_textChanged(const QString &arg1)
         lowerCalib->append(0, v);
         lowerCalib->append(600, v);
     }
-    settings->setValue("lower", v);
+    settings->setValue(QString("%1_lower").arg(deviceName), v);
 }
 
 void MainWindow::on_averTime_textChanged(const QString &arg1)
 {
     bool ret;
     if(arg1.toInt(&ret))
-        settings->setValue("avtime", arg1);
+        settings->setValue(QString("%1_avtime").arg(deviceName), arg1);
 }
 
 void MainWindow::on_saveBtn_clicked()
 {
-//   if(!checkIp(ui->cpcAddr->text())
-//           || !checkIp(ui->smpsAddr->text())
-//           || !checkIp(ui->testDevAddr->text()))
-//   {
-//        QMessageBox::warning(this, "提示", tr("invalid ip address"), QMessageBox::Ok);
-//        return;
-//   }
-//   else
-//   {
-//       settings->setValue("cpcaddr", ui->cpcAddr->text());
-//       settings->setValue("smpsaddr", ui->smpsAddr->text());
-//       settings->setValue("testaddr", ui->testDevAddr->text());
-//   }
+    if(!checkIp(ui->cpcAddr->text()))
+    {
+        QMessageBox::warning(this, "提示", tr("invalid ip address"), QMessageBox::Ok);
+        return;
+    }
 
-//   int port = ui->listenPort->text().toInt();
-//   if(port < 0 || port > 65535)
-//   {
-//        QMessageBox::warning(this, "提示", tr("invalid listen port"), QMessageBox::Ok);
-//        return;
-//   }
-//   else
-//   {
-//       settings->setValue("port", ui->listenPort->text());
-//   }
+    settings->setValue(QString("%1_cpcaddr").arg(deviceName), ui->cpcAddr->text());
+    int port = ui->listenPort->text().toInt();
+    if(port < 0 || port > 65535)
+    {
+        QMessageBox::warning(this, "提示", tr("invalid listen port"), QMessageBox::Ok);
+        return;
+    }
+    settings->setValue(QString("%1_port").arg(deviceName), ui->listenPort->text());
 
-//   server->setListenPort(port);
-//   addrList["cpc"] = ui->cpcAddr->text();
-//   addrList["smps"] = ui->smpsAddr->text();
-//   addrList["test"]  = ui->testDevAddr->text();
-//   server->setClientMap(addrList);
 }
 
-void MainWindow::onSigClientConn(QString ip)
-{
-    qDebug()<<"connect signal" << ip;
-//    foreach(QString str, addrList.keys())
-//        if(addrList[str] == ip)
-//            addrLineList[str]->setStyleSheet("background-color: rgb(0, 255, 127);");
-}
-
-void MainWindow::onSigClientDisconn(QString ip)
-{
-    qDebug()<<"disconnect signal" << ip;
-//    foreach(QString str, addrList.keys())
-//    {
-//        if(addrList[str] == ip)
-//            addrLineList[str]->setStyleSheet("background-color: rgb(255, 255, 127);");
-//    }
-}
 
 void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 {
@@ -332,7 +271,7 @@ void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 //        ui->smpsVal28->setText(data["28"]);
     }
 
-    if(client == "cpc")
+    if(1)
     {
         if(data.contains("25") && data.size() == 1)
         {
@@ -446,20 +385,20 @@ void MainWindow::onClientRet(QString type, QString ret, QMap<QString,QString> se
     {
         qDebug()<<"type" <<type <<"enter class mode" << ret;
         if(ret == "ok")
-            enterClsDevs.append(type);
+            timer->start(1000);
+//            enterClsDevs.append(type);
     }
 
 //    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps") && enterClsDevs.contains("test"))
-    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps"))
-    {
-        enterClsDevs.clear();
-        timer->start(1000);
-    }
+//    if(enterClsDevs.contains("cpc") && enterClsDevs.contains("smps"))
+//    {
+//        enterClsDevs.clear();
+//    }
 
-    if(enterAutoDevs.contains("cpc") && enterAutoDevs.contains("smps") && enterAutoDevs.contains("test"))
-    {
-        enterAutoDevs.clear();
-    }
+//    if(enterAutoDevs.contains("cpc") && enterAutoDevs.contains("smps") && enterAutoDevs.contains("test"))
+//    {
+//        enterAutoDevs.clear();
+//    }
 }
 
 void MainWindow::on_clientListBtn_clicked()
@@ -469,27 +408,15 @@ void MainWindow::on_clientListBtn_clicked()
 
 void MainWindow::on_setMeter_textChanged(const QString &arg1)
 {
+//    qDebug()<<"text changed";
     bool ret;
     ret = arg1.toInt(&ret);
     if(ret)
-        settings->setValue("diameter", arg1);
+        settings->setValue(QString("%1_diameter").arg(deviceName), arg1);
 }
 
 void MainWindow::on_tableBtn_clicked()
 {
-//    model->removeRows(0, model->rowCount());
-//    for(int i = 0; i < errVList.size(); i ++)
-//    {
-//        if(i > testVList.size() || i > cpcVList.size())
-//            break;
-//        QList<QStandardItem*> rowItems;
-//        rowItems << new QStandardItem(datetimeList[i]) << new QStandardItem(QString("%1").arg(cpcVList[i]))
-//                 << new QStandardItem(QString("%1").arg(testVList[i])) << new QStandardItem(QString("%1").arg(errVList[i]));
-
-//        model->appendRow(rowItems);
-//    }
-
-//    compareWindow->show();
 }
 
 void MainWindow::on_cpcConnBtn_clicked()

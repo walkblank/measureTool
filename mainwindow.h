@@ -37,8 +37,8 @@ private slots:
     void on_lowerValue_textChanged(const QString &arg1);
     void on_averTime_textChanged(const QString &arg1);
     void on_saveBtn_clicked();
-    void onSigClientConn(QString ip);
-    void onSigClientDisconn(QString ip);
+//    void onSigClientConn(QString ip);
+//    void onSigClientDisconn(QString ip);
     void onClientData(QString, QMap<QString,QString>);
     void onClientRet(QString,QString, QMap<QString,QString>);
 
@@ -55,7 +55,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-//    MeasureServer *server;
+
+    QString deviceName;
     CalibClient *cpcClient;
     QChart  *m_chart;
     QChartView *m_chartView;
@@ -104,7 +105,6 @@ private:
 private:
     void initChartsView();
     void loadSettings();
-    void getLocalIpAddr();
     bool checkIp(QString ip);
 };
 #endif // MAINWINDOW_H

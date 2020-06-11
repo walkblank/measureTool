@@ -53,6 +53,8 @@ private:
     Md19Client *mdClient1, *mdClient2;
     CalibClient *cpc1Client, *cpc2Client;
 
+    MeasureServer *server;
+
     QList<QPushButton *> mdStartBtns;
 };
 

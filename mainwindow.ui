@@ -97,7 +97,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="sampleInterval">
+            <property name="text">
+             <string>10</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -204,7 +208,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
+           <widget class="QLineEdit" name="sampleCnt">
+            <property name="text">
+             <string>10</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -270,11 +278,22 @@
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="cpcConnBtn">
-        <property name="text">
-         <string>连接</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="cpcConnBtn">
+          <property name="text">
+           <string>连接</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveBtn">
+          <property name="text">
+           <string>保存</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
