@@ -53,6 +53,15 @@ void CalibClient::enterClassifierMode(QString diameter)
     setValue(cmdMap);
 }
 
+void CalibClient::enterSmpsClassifierMode(QString diameter)
+{
+    QMap<QString,QString> cmdMap;
+    cmdMap["201"] = "4";
+    cmdMap["140"] = diameter;
+
+    setValue(cmdMap);
+}
+
 void CalibClient::enterAutoMode()
 {
     QMap<QString,QString> cmdMap;
@@ -62,17 +71,22 @@ void CalibClient::enterAutoMode()
 
 int CalibClient::getValue(QList<QString> vals)
 {
+    if(state() != QAbstractSocket::ConnectedState)
+        return 0;
     QStringList valList;
     QString sendStr;
     foreach(QString val, vals)
         valList.append(val);
     sendStr = QString("<getVal%1>\r\n").arg(valList.join(";"));
-//    qDebug()<<"get val" << sendStr;
+    qDebug()<<"get val" << sendStr;
     return sock->write(sendStr.toStdString().c_str());
 }
 
 int CalibClient::setValue(QMap<QString,QString> valueSet)
 {
+    if(state() != QAbstractSocket::ConnectedState)
+        return 0;
+    QStringList valList;
     int sendLen;
     setMode(valueSet.keys());
     QStringList valSet;
@@ -200,7 +214,7 @@ void CalibClient::simuDataProcess()
                 {
                     sendValList.append(QString("%1=%2").arg(singleCmd).arg(devValueSet[singleCmd]));
                 }
-                else if(singleCmd == "25")
+                else if(singleCmd == "27" || singleCmd == "28")
                 {
                     sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(1.00)));
                 }

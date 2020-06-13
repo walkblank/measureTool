@@ -15,14 +15,8 @@ int  Md19Client::writeMyData(const char *data, int writeLen)
 
 void Md19Client::onDataReady()
 {
-    //    static QByteArray leftData = QByteArray();
-    //    static int step = 0; // 0,start; 1, content ;2, fin;
     QByteArray readData = readAll();
-    //    readData.prepend(leftData);
-    //    if(step == 0)
-    //    {
 
-    //    }
     qDebug()<<"on data Recv" << readData.size();
 
     qDebug()<< QString(readData.toHex(' '));
@@ -54,7 +48,6 @@ void Md19Client::onDataReady()
         emit sigData(0x5, beStart, 0);
     }
         break;
-
     case 0x4: // read temp and flowrate
         emit sigData(0x4,
                      QString(QByteArray(readData.data()+8, 2).toHex()),

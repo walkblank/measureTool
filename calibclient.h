@@ -17,6 +17,7 @@ public:
     QString getClientType() { return clientType;}
 
     void enterClassifierMode(QString diameter);
+    void enterSmpsClassifierMode(QString diameter);
     void enterAutoMode();
 
     int getValue(QList<QString> vals);

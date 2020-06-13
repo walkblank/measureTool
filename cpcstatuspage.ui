@@ -34,7 +34,7 @@
 border-image: url(:/image/cpc.png);
 }</string>
      </property>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="val29">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -43,11 +43,17 @@ border-image: url(:/image/cpc.png);
         <height>51</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(177, 177, 177);</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QLineEdit" name="val24">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -56,11 +62,17 @@ border-image: url(:/image/cpc.png);
         <height>51</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(0, 170, 255);</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_3">
+     <widget class="QLineEdit" name="val30">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -69,11 +81,17 @@ border-image: url(:/image/cpc.png);
         <height>51</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(255, 0, 0);</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="val0">
       <property name="geometry">
        <rect>
         <x>610</x>
@@ -100,15 +118,15 @@ border-image: url(:/image/cpc.png);
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLineEdit" name="lineEdit_4"/>
+        <widget class="QLineEdit" name="valset127"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="setVal127Btn">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 170, 255);</string>
          </property>
          <property name="text">
-          <string>set</string>
+          <string>设置温度</string>
          </property>
         </widget>
        </item>
@@ -125,21 +143,21 @@ border-image: url(:/image/cpc.png);
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="lineEdit_5"/>
+        <widget class="QLineEdit" name="valset128"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="setVal128Btn">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(85, 170, 255);</string>
          </property>
          <property name="text">
-          <string>set</string>
+          <string>设置温度</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_6">
+     <widget class="QLineEdit" name="val27">
       <property name="geometry">
        <rect>
         <x>510</x>
@@ -148,8 +166,27 @@ border-image: url(:/image/cpc.png);
         <height>51</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(163, 163, 163);</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="readValBtn">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>467</y>
+        <width>93</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>读取参数</string>
       </property>
      </widget>
     </widget>

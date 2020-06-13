@@ -12,13 +12,27 @@ MainStartUp::MainStartUp(QWidget *parent) :
 
     cpc1Client = new CalibClient();
     cpc2Client = new CalibClient();
+    smpsClient = new CalibClient();
 
     cpc1Window = new MainWindow("CPC1");
     cpc1Window->setClient(cpc1Client);
+    cpc1Window->setSmpsClient(smpsClient);
+
     cpc2Window = new MainWindow("CPC2");
     cpc2Window->setClient(cpc2Client);
+    cpc2Window->setSmpsClient(smpsClient);
+
+    connect(cpc1Client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
+            this, SLOT(onCpcDataSig(QString, QMap<QString,QString>)));
+
+    connect(cpc2Client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
+            this, SLOT(onCpcDataSig(QString, QMap<QString,QString>)));
 
     smpsPage = new SmpsStatusPage();
+    smpsPage->setClient(smpsClient);
+
+    connect(cpc2Client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
+            smpsPage, SLOT(onClientData(QString, QMap<QString,QString>)));
 
     mdClient1 = new Md19Client();
     mdClient2 = new Md19Client();
@@ -33,12 +47,21 @@ MainStartUp::MainStartUp(QWidget *parent) :
     connect(mdClient1, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
     connect(mdClient2, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
 
-    connect(mide1Page, SIGNAL(sigXishiVal(QString)), this, SLOT(onXishiValSig(QString)));
-    connect(mide2Page, SIGNAL(sigXishiVal(QString)), this, SLOT(onXishiValSig(QString)));
+    connect(mide1Page, SIGNAL(sigXishiVal(QString, QString)), this, SLOT(onXishiValSig(QString, QString)));
+    connect(mide2Page, SIGNAL(sigXishiVal(QString, QString)), this, SLOT(onXishiValSig(QString, QString)));
+
+    connect(mide1Page, SIGNAL(sigXishiVal(QString, QString)), cpc1Window, SLOT(onXishiSig(QString, QString)));
+    connect(mide1Page, SIGNAL(sigXishiVal(QString, QString)), cpc2Window, SLOT(onXishiSig(QString, QString)));
+
+    connect(mide2Page, SIGNAL(sigXishiVal(QString, QString)), cpc1Window, SLOT(onXishiSig(QString, QString)));
+    connect(mide2Page, SIGNAL(sigXishiVal(QString, QString)), cpc2Window, SLOT(onXishiSig(QString, QString)));
+
 
     mdStartBtns << ui->startMd1Btn << ui->startMd2Btn;
 
     server = new MeasureServer(3320);
+    server1 = new MeasureServer(3310);
+    server2 = new MeasureServer(3330);
 }
 
 void MainStartUp::onMdClientConnect()
@@ -124,7 +147,7 @@ void MainStartUp::on_startMd2Btn_clicked()
         mdClient2->startDev();
 }
 
-void MainStartUp::onXishiValSig(QString val)
+void MainStartUp::onXishiValSig(QString val, QString devName)
 {
     MideSettingPage *page = static_cast<MideSettingPage *>(sender());
     if(page == mide1Page)
@@ -133,9 +156,29 @@ void MainStartUp::onXishiValSig(QString val)
         ui->md2DilutionVal->setText(val);
 }
 
+void MainStartUp::onCpcDataSig(QString type, QMap<QString,QString> values)
+{
+    if(values.contains("28"))
+    {
+        CalibClient *client = static_cast<CalibClient*>(sender());
+        if(client == cpc1Client)
+        {
+            ui->cpc1Cn->setText(values["27"]);
+            ui->cpc1FlowRate->setText(values["28"]);
+        }
+        else
+        {
+            ui->cpc2Cn->setText(values["27"]);
+            ui->cpc2FlowRate->setText(values["28"]);
+        }
+    }
+}
+
 void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1)
 {
+    Q_UNUSED(var1)
     int idx = 0;
+
     Md19Client *client = static_cast<Md19Client*>(sender());
     if(client == mdClient2)
         idx = 1;

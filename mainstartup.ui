@@ -281,7 +281,7 @@ background-color: rgb(138, 138, 138);</string>
      <rect>
       <x>890</x>
       <y>260</y>
-      <width>161</width>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -334,7 +334,7 @@ background-color: rgb(138, 138, 138);</string>
      <rect>
       <x>890</x>
       <y>290</y>
-      <width>161</width>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -392,9 +392,9 @@ background-color: rgb(138, 138, 138);</string>
    <widget class="QFrame" name="frame_5">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>960</x>
       <y>400</y>
-      <width>161</width>
+      <width>181</width>
       <height>41</height>
      </rect>
     </property>
@@ -445,9 +445,9 @@ background-color: rgb(138, 138, 138);</string>
    <widget class="QFrame" name="frame_6">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>960</x>
       <y>440</y>
-      <width>161</width>
+      <width>181</width>
       <height>31</height>
      </rect>
     </property>

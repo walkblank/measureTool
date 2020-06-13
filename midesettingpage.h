@@ -20,7 +20,7 @@ public:
     void setClient(Md19Client *cli);
 
 signals:
-    void sigXishiVal(QString);
+    void sigXishiVal(QString, QString);
 
 private slots:
     void on_connBtn_clicked();

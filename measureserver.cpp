@@ -82,21 +82,13 @@ void MeasureServer::onNewConnection()
     connect(socket, SIGNAL(disconnected()), this, SLOT(onClientDisconnect()));
     qDebug()<<socket->peerAddress();
     QString address = socket->peerAddress().toString();
-    //    foreach(QString key, clientMap.keys())
-    //    {
-    //        if(clientMap[key] == address)
-    //        {
-//    qDebug()<<"test client connection" << key << address;
+
     CalibClient *client = new CalibClient("simu");
     client->AttachSocket(socket);
     connect(client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
             this, SIGNAL(sigOnClientData(QString, QMap<QString,QString>)));
     connect(client, SIGNAL(sigSetRet(QString,QString, QMap<QString,QString>)),
             this, SIGNAL(sigSetRet(QString,QString, QMap<QString,QString>)));
-//    client->setClientType(key);
     clientList[socket->peerAddress().toString()] = client;
     emit sigOnConnect(socket->peerAddress().toString());
-    //            break;
-    //        }
-    //    }
 }

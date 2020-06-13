@@ -98,8 +98,21 @@
           </item>
           <item>
            <widget class="QLineEdit" name="sampleInterval">
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
             <property name="text">
              <string>10</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>s</string>
             </property>
            </widget>
           </item>
@@ -211,6 +224,16 @@
            <widget class="QLineEdit" name="sampleCnt">
             <property name="text">
              <string>10</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>次</string>
             </property>
            </widget>
           </item>
@@ -328,7 +351,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Start</string>
+         <string>取值</string>
         </property>
        </widget>
       </item>
@@ -342,7 +365,7 @@
       <item>
        <widget class="QPushButton" name="menuBtn">
         <property name="text">
-         <string>状态</string>
+         <string>设备状态</string>
         </property>
        </widget>
       </item>

@@ -23,6 +23,7 @@ MideSettingPage::MideSettingPage(QString dev, QWidget *parent) :
     ui->tempSel->addItem("80", 4);
     ui->tempSel->addItem("120", 6);
     ui->tempSel->addItem("150", 7);
+    setFixedSize(width(), height());
 }
 
 MideSettingPage::~MideSettingPage()
@@ -91,7 +92,7 @@ void MideSettingPage::on_setTempBtn_clicked()
         factor = 1.21;
     xishiv = 150/ui->xsValue->text().toUInt()*factor;
 
-    emit sigXishiVal(ui->xsValue->text());
+    emit sigXishiVal(ui->xsValue->text(), devName);
     client->setTemp(temp, xishiv);
     saveParam();
 }

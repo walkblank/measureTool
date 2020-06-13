@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include <QtCharts>
+#include <QMutex>
+#include <QtXlsx>
 
-#include <measureserver.h>
-
+#include "measureserver.h"
 #include "datacomparemodel.h"
 #include "clientsimupage.h"
 #include "datacomparewindow.h"
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QString dev, QWidget *parent = nullptr);
     void setClient(CalibClient *client);
+    void setSmpsClient(CalibClient *client);
     ~MainWindow();
 
 private slots:
@@ -37,8 +39,7 @@ private slots:
     void on_lowerValue_textChanged(const QString &arg1);
     void on_averTime_textChanged(const QString &arg1);
     void on_saveBtn_clicked();
-//    void onSigClientConn(QString ip);
-//    void onSigClientDisconn(QString ip);
+
     void onClientData(QString, QMap<QString,QString>);
     void onClientRet(QString,QString, QMap<QString,QString>);
 
@@ -53,21 +54,35 @@ private slots:
     void onConnected();
     void onDisconnected();
 
+    void on_sampleInterval_textChanged(const QString &arg1);
+
+    void on_sampleCnt_textChanged(const QString &arg1);
+    void onXishiSig(QString val, QString devName);
+
 private:
     Ui::MainWindow *ui;
 
     QString deviceName;
-    CalibClient *cpcClient;
+    CalibClient *cpcClient, *smpsCient;
     QChart  *m_chart;
     QChartView *m_chartView;
+    QMutex mutex;
+    QXlsx::Document *currXlsx = nullptr;
 
     bool calib = false;
     bool autom = false;
+    bool isXSSet = false;
     int averageTime = 0;
+    int sampleInterval = 10;
+    int sampleCnt = 10;
+    int writeCnt = 0;
+
+    QList<double> tmpPt,tmpSavePt;
+
+    QMap<QString,QString> xishiVals;
 
     QLineSeries *cpc1slineSeries;
     QLineSeries *cpc10slineSeries;
-//    QLineSeries *testDevLineSeries;
 
     ClientSimuPage *simuPage;
     QLineSeries *upperCalib;
@@ -77,14 +92,8 @@ private:
     QMap<QString, QList<qreal>> pointMaps;
     QList<qreal> cpcPt1;
     QList<qreal> cpcPt10;
-//    QList<qreal> cpcTest;
 
     QSettings *settings;
-
-//    QMap<QString, QString> addrList;
-//    QMap<QString, CalibClient*> connList;
-//    QMap<QString, QLineEdit*> addrLineList;
-
     QList<QString> enterClsDevs;
     QList<QString> enterAutoDevs;
 
@@ -102,9 +111,15 @@ private:
     SettingPage *settingPage;
     CpcStatusPage *stPage;
 
+    QMap<QString,bool> classReadyDevMap, autoReadyDevMap;
+
 private:
     void initChartsView();
     void loadSettings();
     bool checkIp(QString ip);
+
+    void waitSomeTime(int ms);
+    void xlsxFileWriteHeader(QXlsx::Document *file);
+    void xlsxFilwWriteRecord(QXlsx::Document *file, int row, QString time, QString count, QString flowRate, QString md1, QString md2);
 };
 #endif // MAINWINDOW_H
