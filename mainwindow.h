@@ -59,6 +59,8 @@ private slots:
     void on_sampleCnt_textChanged(const QString &arg1);
     void onXishiSig(QString val, QString devName);
 
+    void on_setRangeBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -68,6 +70,9 @@ private:
     QChartView *m_chartView;
     QMutex mutex;
     QXlsx::Document *currXlsx = nullptr;
+
+    QValueAxis *yAxis;
+
 
     bool calib = false;
     bool autom = false;

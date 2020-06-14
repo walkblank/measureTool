@@ -37,7 +37,7 @@ void Md19Client::onDataReady()
 
     qDebug()<<"dataLen" << dataLen;
     char cmd = readData.data()[7];
-    qDebug()<< "cmd" << cmd;
+    qDebug()<< "cmd" << QString("%1").arg(cmd);
     switch(cmd)
     {
 
@@ -50,8 +50,8 @@ void Md19Client::onDataReady()
         break;
     case 0x4: // read temp and flowrate
         emit sigData(0x4,
-                     QString(QByteArray(readData.data()+8, 2).toHex()),
-                     QString(QByteArray(readData.data()+10,2).toHex()));
+                     QString(QByteArray(readData.data()+9, 2).toHex()),
+                     QString(QByteArray(readData.data()+11,2).toHex()));
         break;
     case 0x10:
         emit sigData(0x10, 0, 0);
@@ -72,11 +72,15 @@ void Md19Client::stopDev()
 // 4, 6, 7
 void Md19Client::setTemp(char temp, char xishiV)
 {
+    // 0-10v   0-50000
     char data[4];
-    data[0] = 0;
-    data[1] = temp;
-    data[2] = 0;
-    data[3] = xishiV;
+    unsigned short int val = 25000;
+    data[1] = 0xff & val;
+    data[0] = 0xff & (val>>8);
+    data[3] = 0xff & val;
+    data[2] = 0xff & (val>>8);
+    //data[2] = 0x7f;
+    //data[3] = 0xf0;
     writeRegN(0x10, 0x00, 0x00, 0x2, data, 4);
 }
 

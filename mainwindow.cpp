@@ -19,6 +19,7 @@ MainWindow::MainWindow(QString dev, QWidget *parent)
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     connect(autoTimer, SIGNAL(timeout()), this, SLOT(onAutoTimeout()));
 
+    yAxis = new QValueAxis;
     initChartsView();
     loadSettings();
 
@@ -170,8 +171,9 @@ void MainWindow::initChartsView()
     xAxis->setLabelFormat("%d");
     xAxis->setTitleText("time(s)");
 
-    QValueAxis *yAxis = new QValueAxis;
-    yAxis->setRange(-1, 1);
+//    QValueAxis *yAxis = new QValueAxis;
+    //yAxis->setRange(-1, 1);
+    yAxis->setRange(0, 50000);
     yAxis->setTickCount(11);
     yAxis->setLabelFormat("%.2f");
     yAxis->setMinorTickCount(1);
@@ -202,11 +204,11 @@ void MainWindow::initChartsView()
 
 void MainWindow::on_startBtn_clicked()
 {
-    if(xishiVals.size() != 2)
-    {
-        QMessageBox::warning(this, "提示", "请先设置稀释值", QMessageBox::Ok);
-        return;
-    }
+    //if(xishiVals.size() != 2)
+    //{
+      //  QMessageBox::warning(this, "提示", "请先设置稀释值", QMessageBox::Ok);
+        //return;
+    //}
 
     currXlsx = new QXlsx::Document(QString("%1/%3/%2.xlsx").arg(QApplication::applicationDirPath())
                                    .arg(QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss"))
@@ -312,9 +314,9 @@ void MainWindow::onClientData(QString client, QMap<QString,QString> data)
 
     if(data.contains("28") && data.size() == 2)
     {
-        double value = data["27"].toDouble();
-        QString flowRate = data["28"];
-        ui->cnValue->setText(data["27"]);
+        double value = data["28"].toDouble();
+        QString flowRate = data["27"];
+        ui->cnValue->setText(data["28"]);
 
         if(autom)
         {
@@ -493,4 +495,9 @@ void MainWindow::on_sampleCnt_textChanged(const QString &arg1)
    arg1.toUInt(&ret);
    if(ret)
        settings->setValue(QString("%1_sampleCnt").arg(deviceName), arg1);
+}
+
+void MainWindow::on_setRangeBtn_clicked()
+{
+    yAxis->setRange(ui->startVal->text().toUInt(), ui->endVal->text().toUInt());
 }

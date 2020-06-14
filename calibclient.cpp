@@ -136,12 +136,12 @@ void CalibClient::commDataProcess()
         int secEndpos = data.indexOf("\r\n");
 //        qDebug()<<"comm sec end pos" << secEndpos;
         QString sec = data.mid(0, secEndpos);
-        if(sec.contains("sendVals"))
+        if(sec.contains("sendVal"))
         {
             int startPos = sec.indexOf("<");
             int endPos = sec.indexOf(">");
             QMap<QString,QString> readVals;
-            QString content = sec.mid(startPos+1, endPos-1).replace("sendVals", "");
+            QString content = sec.mid(startPos+1, endPos-1).replace("sendVal ", "");
             qDebug()<<"comm content" << content;
             QStringList contentList = content.split(";");
             foreach(QString singleCont, contentList)
