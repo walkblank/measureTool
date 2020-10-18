@@ -70,7 +70,11 @@ void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1)
 {
     if(cmd == 0x4)
     {
-        ui->curTemp->setText(var.toString());
+//        float tFactor = ui->tempSel->currentText().toUInt()/200.00;
+        unsigned short tempValue = var.toString().toInt(nullptr, 16);
+        //unsigned short tValue =  (0xff & tempValue) | 0xffff | 0xff >> 8;
+        qDebug() << "read tempV" << tempValue << tempValue/50000.00 *200;
+        ui->curTemp->setText(QString("%1").arg(tempValue/50000.00*200));
         ui->lllValue->setText(var1.toString());
     }
     else if(cmd == 0x5)
@@ -82,18 +86,22 @@ void MideSettingPage::on_setTempBtn_clicked()
 {
     if(client->state() != QAbstractSocket::ConnectedState)
         QMessageBox::warning(this, "提示", "请先连接设备", QMessageBox::Ok);
-    char temp = ui->tempSel->currentData().toInt();
-    char xishiv;
+    unsigned short temp = ui->tempSel->currentText().toUInt();
+    unsigned short xishiv;
     double factor = 1;
     QString curTempStr = ui->tempSel->currentText();
     if(curTempStr == "120")
         factor = 1.11;
     else if(curTempStr == "150")
         factor = 1.21;
-    xishiv = 150/ui->xsValue->text().toUInt()*factor;
+    xishiv = (150/ui->xsValue->text().toUInt()*factor*50000)/10;
 
+
+    float tFactor = temp/200.00;
+    unsigned short tempV = tFactor*50000;
+    qDebug()<<"xishiv" << QString("%1").arg(xishiv) << QString("%1").arg(tempV);
     emit sigXishiVal(ui->xsValue->text(), devName);
-    client->setTemp(temp, xishiv);
+    client->setTemp(tempV, xishiv);
     saveParam();
 }
 

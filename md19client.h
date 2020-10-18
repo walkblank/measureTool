@@ -12,7 +12,7 @@ public:
     explicit Md19Client(QObject *parent = nullptr);
     void startDev();
     void stopDev();
-    void setTemp(char temp, char xishiV);
+    void setTemp(unsigned short temp, unsigned short xishiV);
     void readTemp();
     bool getStart() { return beStart;}
 

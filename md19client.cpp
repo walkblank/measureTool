@@ -70,17 +70,16 @@ void Md19Client::stopDev()
 }
 
 // 4, 6, 7
-void Md19Client::setTemp(char temp, char xishiV)
+void Md19Client::setTemp(unsigned short temp, unsigned short xishiV)
 {
     // 0-10v   0-50000
     char data[4];
-    unsigned short int val = 25000;
-    data[1] = 0xff & val;
-    data[0] = 0xff & (val>>8);
-    data[3] = 0xff & val;
-    data[2] = 0xff & (val>>8);
-    //data[2] = 0x7f;
-    //data[3] = 0xf0;
+    //unsigned short int val = 25000;
+    data[1] = 0xff & temp;
+    data[0] = 0xff & (temp >> 8);
+    data[3] = 0xff & xishiV;
+    data[2] = 0xff & (xishiV >> 8);
+
     writeRegN(0x10, 0x00, 0x00, 0x2, data, 4);
 }
 
@@ -118,8 +117,8 @@ int Md19Client::writeRegN(char cmd, char addrH, char addrL, int regNum, char *wr
 
 
 
-//    QByteArray dataSend = QByteArray(data, totalLen);
-//    qDebug()<< QString(dataSend.toHex(' '));
+    QByteArray dataSend = QByteArray(data, totalLen);
+    qDebug()<< QString(dataSend.toHex(' '));
 
     ret = writeMyData(data, totalLen);
     qDebug()<<"write" << ret;
