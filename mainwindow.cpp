@@ -4,6 +4,9 @@
 #include <QHostInfo>
 #include <QDateTime>
 
+//TODO
+// 1 stop timer when disconnect from cpc devcie
+
 MainWindow::MainWindow(QString dev, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), m_chart(new QChart())
