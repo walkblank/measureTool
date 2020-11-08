@@ -224,11 +224,15 @@ void CalibClient::simuDataProcess()
                 }
                 else
                 {
-                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(100)));
+                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(50)+
+                                                                           QRandomGenerator::global()->bounded(1.00)));
+//                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(50+
+//                                                                           QRandomGenerator::global()->bounded(1.00)));
                 }
             }
 //            qDebug()<<"simu sendvals" << sendValList.join(";");
-            QString sendStr = QString("<sendVals%1>07\r\n").arg(sendValList.join(";"));
+//            QString sendStr = QString("<sendVals%1>07\r\n").arg(sendValList.join(";"));
+            QString sendStr = QString("<sendVal %1>07\r\n").arg(sendValList.join(";"));
             sock->write(sendStr.toStdString().c_str());
         }
 

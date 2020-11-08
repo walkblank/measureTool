@@ -40,12 +40,26 @@ void Md19Client::onDataReady()
     qDebug()<< "cmd" << QString("%1").arg(cmd);
     switch(cmd)
     {
-
     case 0x5: // start and stop
     {
-        char val = readData.data()[10];
-        val == 0 ? beStart = false : beStart = true;
-        emit sigData(0x5, beStart, 0);
+        char regId = readData.data()[9];
+        switch(regId)
+        {
+        case 0x0:
+        {
+            char val = readData.data()[10];
+            val == 0 ? beStart = false : beStart = true;
+            emit sigData(0x5, beStart, 0);
+        }
+            break;
+        case 0x1:
+        {
+            char val = readData.data()[10];
+            emit sigData(0x5, val, 0, 1);
+        }
+            break;
+        }
+
     }
         break;
     case 0x4: // read temp and flowrate
@@ -69,14 +83,20 @@ void Md19Client::stopDev()
     writeRegS(0x5, 0, 0, 0x00, 0);
 }
 
+
+void Md19Client::setRemoteSwitch(bool swi)
+{
+    writeRegS(0x5, 0x00, 0x01, swi ? 0xff : 0x0, 0x0);
+}
+
 // 4, 6, 7
 void Md19Client::setTemp(unsigned short temp, unsigned short xishiV)
 {
     // 0-10v   0-50000
     char data[4];
     //unsigned short int val = 25000;
-    data[1] = 0xff & temp;
     data[0] = 0xff & (temp >> 8);
+    data[1] = 0xff & temp;
     data[3] = 0xff & xishiV;
     data[2] = 0xff & (xishiV >> 8);
 

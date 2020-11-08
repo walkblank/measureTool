@@ -66,7 +66,7 @@ void MideSettingPage::on_connBtn_clicked()
     }
 }
 
-void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1)
+void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1, int reg)
 {
     if(cmd == 0x4)
     {
@@ -121,4 +121,9 @@ void MideSettingPage::on_readTempBtn_clicked()
     if(client->state() != QAbstractSocket::ConnectedState)
         QMessageBox::warning(this, "提示", "请先连接设备", QMessageBox::Ok);
     client->readTemp();
+}
+
+void MideSettingPage::on_remoteSwiBtn_clicked()
+{
+
 }

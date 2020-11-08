@@ -15,9 +15,10 @@ public:
     void setTemp(unsigned short temp, unsigned short xishiV);
     void readTemp();
     bool getStart() { return beStart;}
+    void setRemoteSwitch(bool swi);
 
 signals:
-    void sigData(int cmd, QVariant var, QVariant var1);
+    void sigData(int cmd, QVariant var, QVariant var1, int reg = 0);
 
 private slots:
     void onDataReady();

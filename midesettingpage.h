@@ -28,9 +28,11 @@ private slots:
     void onClientConnected();
     void onClienDisconnected();
     void on_saveBtn_clicked();
-    void onSigData(int cmd, QVariant, QVariant);
+    void onSigData(int cmd, QVariant, QVariant, int reg = 0);
 
     void on_readTempBtn_clicked();
+
+    void on_remoteSwiBtn_clicked();
 
 private:
     Ui::MideSettingPage *ui;

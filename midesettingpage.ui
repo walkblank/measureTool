@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>566</height>
+    <width>686</width>
+    <height>579</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -147,6 +147,13 @@
       <widget class="QPushButton" name="connBtn">
        <property name="text">
         <string>连接设备</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="remoteSwiBtn">
+       <property name="text">
+        <string>远程开关</string>
        </property>
       </widget>
      </item>
