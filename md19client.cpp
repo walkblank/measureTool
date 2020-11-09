@@ -43,19 +43,19 @@ void Md19Client::onDataReady()
     case 0x5: // start and stop
     {
         char regId = readData.data()[9];
+        char val = readData.data()[10];
         switch(regId)
         {
         case 0x0:
         {
-            char val = readData.data()[10];
             val == 0 ? beStart = false : beStart = true;
             emit sigData(0x5, beStart, 0);
         }
             break;
         case 0x1:
         {
-            char val = readData.data()[10];
-            emit sigData(0x5, val, 0, 1);
+            val == 0 ? beRemoteStart = false : beRemoteStart = true;
+            emit sigData(0x5, beRemoteStart, 0, 1);
         }
             break;
         }

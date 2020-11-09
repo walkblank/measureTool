@@ -70,7 +70,7 @@ void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1, int reg)
 {
     if(cmd == 0x4)
     {
-//        float tFactor = ui->tempSel->currentText().toUInt()/200.00;
+        //        float tFactor = ui->tempSel->currentText().toUInt()/200.00;
         unsigned short tempValue = var.toString().toInt(nullptr, 16);
         //unsigned short tValue =  (0xff & tempValue) | 0xffff | 0xff >> 8;
         qDebug() << "read tempV" << tempValue << tempValue/50000.00 *200;
@@ -79,7 +79,10 @@ void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1, int reg)
     }
     else if(cmd == 0x5)
     {
-        ui->devStatus->setText(var.toBool() ? "泵启动" : "泵停止");
+        if(reg == 0x0)
+            ui->devStatus->setText(var.toBool() ? "泵启动" : "泵停止");
+        else if(reg == 0x1)
+            ui->remoteSwiBtn->setText(var.toBool() ? "关闭远程开关" : "开启远程开关");
     }
 }
 void MideSettingPage::on_setTempBtn_clicked()

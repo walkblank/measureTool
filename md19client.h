@@ -29,7 +29,7 @@ private:
     int readReg(char cmd, char addrH, char addL, int regNum);
     int writeMyData(const char *data, int dataLen);
     bool beStart = false;
-
+    bool beRemoteStart = false;
 };
 
 #endif // MD19CLIENT_H
