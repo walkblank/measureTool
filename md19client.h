@@ -3,6 +3,10 @@
 
 #include <QTcpSocket>
 
+typedef struct {
+    char startCode[5];
+} MdDataHeader;
+
 
 class Md19Client : public QTcpSocket
 {
@@ -16,12 +20,14 @@ public:
     void readTemp();
     bool getStart() { return beStart;}
     void setRemoteSwitch(bool swi);
+    void readParam();
 
 signals:
     void sigData(int cmd, QVariant var, QVariant var1, int reg = 0);
 
 private slots:
     void onDataReady();
+    void onDataRecv();
 
 private:
     int writeRegN(char cmd, char addrH, char addL, int regNum, char *writeData, int dataLen);
@@ -30,6 +36,8 @@ private:
     int writeMyData(const char *data, int dataLen);
     bool beStart = false;
     bool beRemoteStart = false;
+
+    MdDataHeader header;
 };
 
 #endif // MD19CLIENT_H

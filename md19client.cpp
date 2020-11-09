@@ -13,6 +13,11 @@ int  Md19Client::writeMyData(const char *data, int writeLen)
     return write(data, writeLen);
 }
 
+void Md19Client::onDataRecv()
+{
+
+}
+
 void Md19Client::onDataReady()
 {
     QByteArray readData = readAll();
@@ -59,13 +64,20 @@ void Md19Client::onDataReady()
         }
             break;
         }
-
     }
         break;
     case 0x4: // read temp and flowrate
-        emit sigData(0x4,
-                     QString(QByteArray(readData.data()+9, 2).toHex()),
-                     QString(QByteArray(readData.data()+11,2).toHex()));
+    {
+        if(dataLen == 6) //  read temp and flowrate
+            emit sigData(0x4,
+                             QString(QByteArray(readData.data()+9, 2).toHex()),
+                             QString(QByteArray(readData.data()+11,2).toHex()));
+
+        else if(dateLen == 8)
+        {
+            qDebug()<<"read param";
+        }
+    }
         break;
     case 0x10:
         emit sigData(0x10, 0, 0);
@@ -87,6 +99,11 @@ void Md19Client::stopDev()
 void Md19Client::setRemoteSwitch(bool swi)
 {
     writeRegS(0x5, 0x00, 0x01, swi ? 0xff : 0x0, 0x0);
+}
+
+void Md19Client::readParam()
+{
+    readReg(0x4, 0x00, 0x0d, 3);
 }
 
 // 4, 6, 7
