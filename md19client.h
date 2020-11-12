@@ -5,6 +5,7 @@
 
 typedef struct {
     char startCode[5];
+    char dataLen;
 } MdDataHeader;
 
 
@@ -30,6 +31,7 @@ private slots:
     void onDataRecv();
 
 private:
+    void parseContent(QByteArray content);
     int writeRegN(char cmd, char addrH, char addL, int regNum, char *writeData, int dataLen);
     int writeRegS(char cmd, char addrH, char addL, char writeDataH, char writeDataL);
     int readReg(char cmd, char addrH, char addL, int regNum);

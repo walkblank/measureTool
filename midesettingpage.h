@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QObject>
 #include <QSettings>
+#include <QShowEvent>
+#include <QHideEvent>
 
 #include "md19client.h"
 
@@ -18,6 +20,9 @@ public:
     explicit MideSettingPage(QString dev, QWidget *parent = nullptr);
     ~MideSettingPage();
     void setClient(Md19Client *cli);
+
+    void showEvent(QShowEvent *evt);
+    void closeEvent(QCloseEvent *evt);
 
 signals:
     void sigXishiVal(QString, QString);

@@ -31,6 +31,18 @@ MideSettingPage::~MideSettingPage()
     delete ui;
 }
 
+void MideSettingPage::showEvent(QShowEvent *evt)
+{
+    Q_UNUSED(evt)
+    qDebug()<<"page show";
+}
+
+void MideSettingPage::closeEvent(QCloseEvent *evt)
+{
+    Q_UNUSED(evt)
+    qDebug()<<"page close";
+}
+
 void MideSettingPage::setClient(Md19Client *cli)
 {
     client = cli;

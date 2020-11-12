@@ -13,9 +13,32 @@ int  Md19Client::writeMyData(const char *data, int writeLen)
     return write(data, writeLen);
 }
 
+void Md19Client::parseContent(QByteArray content)
+{
+    int len = content.length();
+}
+
 void Md19Client::onDataRecv()
 {
+    static QByteArray dataLeft = QByteArray();
 
+    QByteArray recvData = readAll();
+    qDebug()<<"+++recv Len" << recvData.length() <<"recvData" << recvData.toHex(' ');
+    dataLeft.append(recvData);
+
+    while(dataLeft.length() > 0)
+    {
+        if(dataLeft.length() < 6)
+            break;
+        int len =  dataLeft[5];
+        QByteArray content = dataLeft.mid(6, len);
+        if(content.length() < len)
+            break;
+        qDebug()<<"contentLen" << len;
+        qDebug()<<"content" << content.toHex(' ');
+        dataLeft =  dataLeft.mid(6+len, dataLeft.length()-6-len);
+        qDebug()<<"dataLeft" << dataLeft.toHex(' ');
+    }
 }
 
 void Md19Client::onDataReady()
@@ -73,7 +96,7 @@ void Md19Client::onDataReady()
                              QString(QByteArray(readData.data()+9, 2).toHex()),
                              QString(QByteArray(readData.data()+11,2).toHex()));
 
-        else if(dateLen == 8)
+        else if(dataLen == 8)
         {
             qDebug()<<"read param";
         }
