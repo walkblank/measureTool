@@ -38,7 +38,8 @@ SOURCES += \
     measureserver.cpp \
     midesettingpage.cpp \
     settingpage.cpp \
-    smpsstatuspage.cpp
+    smpsstatuspage.cpp \
+    testdevpage.cpp
 
 HEADERS += \
     calibclient.h \
@@ -53,7 +54,8 @@ HEADERS += \
     measureserver.h \
     midesettingpage.h \
     settingpage.h \
-    smpsstatuspage.h
+    smpsstatuspage.h \
+    testdevpage.h
 
 FORMS += \
     clientsettingwindow.ui \
@@ -64,7 +66,8 @@ FORMS += \
     mainwindow.ui \
     midesettingpage.ui \
     settingpage.ui \
-    smpsstatuspage.ui
+    smpsstatuspage.ui \
+    testdevpage.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

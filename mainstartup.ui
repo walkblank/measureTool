@@ -502,6 +502,29 @@ background-color: rgb(138, 138, 138);</string>
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="openTestDevBtn">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>470</y>
+      <width>121</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(112, 176, 15);</string>
+    </property>
+    <property name="text">
+     <string>测试设备</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

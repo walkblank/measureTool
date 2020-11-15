@@ -110,7 +110,11 @@
       </widget>
      </item>
      <item row="2" column="3">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="speed">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="devStatus">
@@ -140,6 +144,20 @@
       <widget class="QLabel" name="label_10">
        <property name="text">
         <string>原料气压力</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="airTemp">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLineEdit" name="ariPressure">
+       <property name="enabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -177,14 +195,14 @@
      <item>
       <widget class="QPushButton" name="remoteSwiBtn">
        <property name="text">
-        <string>远程开关 开启</string>
+        <string>开启远程开关</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="readTempBtn">
        <property name="text">
-        <string>读取温度与流量</string>
+        <string>读取参数</string>
        </property>
       </widget>
      </item>

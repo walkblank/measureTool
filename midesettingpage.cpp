@@ -24,6 +24,9 @@ MideSettingPage::MideSettingPage(QString dev, QWidget *parent) :
     ui->tempSel->addItem("120", 6);
     ui->tempSel->addItem("150", 7);
     setFixedSize(width(), height());
+
+    queryTimer = new QTimer();
+    connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryParam()));
 }
 
 MideSettingPage::~MideSettingPage()
@@ -34,13 +37,14 @@ MideSettingPage::~MideSettingPage()
 void MideSettingPage::showEvent(QShowEvent *evt)
 {
     Q_UNUSED(evt)
-    qDebug()<<"page show";
+    if(!queryTimer->isActive() && (client->state() == QAbstractSocket::ConnectedState))
+        queryTimer->start(3000);
 }
 
 void MideSettingPage::closeEvent(QCloseEvent *evt)
 {
     Q_UNUSED(evt)
-    qDebug()<<"page close";
+    queryTimer->stop();
 }
 
 void MideSettingPage::setClient(Md19Client *cli)
@@ -48,20 +52,21 @@ void MideSettingPage::setClient(Md19Client *cli)
     client = cli;
     connect(client, SIGNAL(connected()), this, SLOT(onClientConnected()));
     connect(client, SIGNAL(disconnected()), this, SLOT(onClienDisconnected()));
-    connect(client, SIGNAL(sigData(int, QVariant, QVariant)), this, SLOT(onSigData(int, QVariant, QVariant)));
+    connect(client, SIGNAL(sigData(int, QVariant, QVariant, int)), this, SLOT(onSigData(int, QVariant, QVariant, int)));
+    connect(client, SIGNAL(sigParam(int,QMap<QString,QString>)), this, SLOT(onParam(int,QMap<QString,QString>)));
 }
 
 void MideSettingPage::onClientConnected()
 {
-    qDebug()<< "page connected";
     ui->ip->setStyleSheet("background-color: rgb(0, 255, 127);");
     saveParam();
     ui->connBtn->setText("断开连接");
+    if(!queryTimer->isActive())
+        queryTimer->start(3000);
 }
 
 void MideSettingPage::onClienDisconnected()
 {
-    qDebug()<< "page disconnected";
     ui->ip->setStyleSheet("background-color: rgb(255, 255, 127);");
     ui->connBtn->setText("连接设备");
 }
@@ -78,16 +83,37 @@ void MideSettingPage::on_connBtn_clicked()
     }
 }
 
+void MideSettingPage::queryParam()
+{
+    client->readTemp();
+    client->readParam();
+}
+
+void MideSettingPage::onParam(int funcCode, QMap<QString, QString> param)
+{
+    qDebug()<<"funcCode" << funcCode <<  param;
+    if(funcCode == 0x4)
+    {
+        ui->speed->setText(QString("%1").arg(param["speed"].toUInt(nullptr, 16)));
+        ui->airTemp->setText(QString("%1").arg(param["temp"].toUInt(nullptr, 16)));
+        ui->ariPressure->setText(QString("%1").arg(param["pressure"].toUInt(nullptr, 16)));
+    }
+}
+
 void MideSettingPage::onSigData(int cmd, QVariant var, QVariant var1, int reg)
 {
     if(cmd == 0x4)
     {
+        if(reg == 7)
+        {
         //        float tFactor = ui->tempSel->currentText().toUInt()/200.00;
         unsigned short tempValue = var.toString().toInt(nullptr, 16);
-        //unsigned short tValue =  (0xff & tempValue) | 0xffff | 0xff >> 8;
+        unsigned short llValue = var1.toString().toInt(nullptr, 16);
         qDebug() << "read tempV" << tempValue << tempValue/50000.00 *200;
         ui->curTemp->setText(QString("%1").arg(tempValue/50000.00*200));
-        ui->lllValue->setText(var1.toString());
+//        ui->lllValue->setText(var1.toString());
+        ui->lllValue->setText(QString("%1").arg(llValue/50000.00*5));
+        }
     }
     else if(cmd == 0x5)
     {
@@ -109,12 +135,12 @@ void MideSettingPage::on_setTempBtn_clicked()
         factor = 1.11;
     else if(curTempStr == "150")
         factor = 1.21;
-    xishiv = (150/ui->xsValue->text().toUInt()*factor*50000)/10;
+    xishiv = ((150*50000/ui->xsValue->text().toUInt()*factor)/10);
 
 
     float tFactor = temp/200.00;
     unsigned short tempV = tFactor*50000;
-    qDebug()<<"xishiv" << QString("%1").arg(xishiv) << QString("%1").arg(tempV);
+//    qDebug()<<"xishiv" << QString("%1").arg(xishiv) << QString("%1").arg(tempV);
     emit sigXishiVal(ui->xsValue->text(), devName);
     client->setTemp(tempV, xishiv);
     saveParam();
@@ -136,9 +162,10 @@ void MideSettingPage::on_readTempBtn_clicked()
     if(client->state() != QAbstractSocket::ConnectedState)
         QMessageBox::warning(this, "提示", "请先连接设备", QMessageBox::Ok);
     client->readTemp();
+    client->readParam();
 }
 
 void MideSettingPage::on_remoteSwiBtn_clicked()
 {
-
+    client->setRemoteSwitch(!client->getSwitch());
 }

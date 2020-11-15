@@ -10,9 +10,13 @@ MainStartUp::MainStartUp(QWidget *parent) :
     ui->setupUi(this);
     setFixedSize(width(), height());
 
+    queryTimer = new QTimer();
+    connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryRoutine()));
+
     cpc1Client = new CalibClient();
     cpc2Client = new CalibClient();
     smpsClient = new CalibClient();
+    testClient = new CalibClient();
 
     cpc1Window = new MainWindow("CPC1");
     cpc1Window->setClient(cpc1Client);
@@ -22,11 +26,23 @@ MainStartUp::MainStartUp(QWidget *parent) :
     cpc2Window->setClient(cpc2Client);
     cpc2Window->setSmpsClient(smpsClient);
 
+    testDevPage = new TestDevPage();
+    testDevPage->setTestClient(testClient);
+
     connect(cpc1Client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
             this, SLOT(onCpcDataSig(QString, QMap<QString,QString>)));
 
     connect(cpc2Client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
             this, SLOT(onCpcDataSig(QString, QMap<QString,QString>)));
+
+    connect(testClient, SIGNAL(sigReadData(QString,QMap<QString,QString>)),
+            cpc1Window, SLOT(onTestData(QString,QMap<QString,QString>)));
+
+    connect(testClient, SIGNAL(sigReadData(QString,QMap<QString,QString>)),
+            cpc2Window, SLOT(onTestData(QString,QMap<QString,QString>)));
+
+    connect(cpc1Window, SIGNAL(sigStartQuery()), this, SLOT(onTestQuerySignal()));
+    connect(cpc2Window, SIGNAL(sigStartQuery()), this, SLOT(onTestQuerySignal()));
 
     smpsPage = new SmpsStatusPage();
     smpsPage->setClient(smpsClient);
@@ -44,8 +60,8 @@ MainStartUp::MainStartUp(QWidget *parent) :
     mide2Page = new MideSettingPage("MD19_3E-2");
     mide2Page->setClient(mdClient2);
 
-    connect(mdClient1, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
-    connect(mdClient2, SIGNAL(sigData(int , QVariant, QVariant)), SLOT(onSigData(int, QVariant, QVariant)));
+    connect(mdClient1, SIGNAL(sigData(int , QVariant, QVariant, int)), SLOT(onSigData(int, QVariant, QVariant, int)));
+    connect(mdClient2, SIGNAL(sigData(int , QVariant, QVariant, int)), SLOT(onSigData(int, QVariant, QVariant, int)));
 
     connect(mide1Page, SIGNAL(sigXishiVal(QString, QString)), this, SLOT(onXishiValSig(QString, QString)));
     connect(mide2Page, SIGNAL(sigXishiVal(QString, QString)), this, SLOT(onXishiValSig(QString, QString)));
@@ -62,6 +78,19 @@ MainStartUp::MainStartUp(QWidget *parent) :
     server = new MeasureServer(3320);
     server1 = new MeasureServer(3310);
     server2 = new MeasureServer(3330);
+}
+
+void MainStartUp::onTestQuerySignal()
+{
+    if(!queryTimer->isActive())
+        queryTimer->start(1000);
+}
+
+void MainStartUp::queryRoutine()
+{
+    QList<QString> channels;
+    channels << "27" << "28";
+    testClient->getValue(channels);
 }
 
 void MainStartUp::onMdClientConnect()
@@ -163,18 +192,18 @@ void MainStartUp::onCpcDataSig(QString type, QMap<QString,QString> values)
         CalibClient *client = static_cast<CalibClient*>(sender());
         if(client == cpc1Client)
         {
-            ui->cpc1Cn->setText(values["27"]);
-            ui->cpc1FlowRate->setText(values["28"]);
+            ui->cpc1Cn->setText(values["28"]);
+            ui->cpc1FlowRate->setText(values["27"]);
         }
         else
         {
-            ui->cpc2Cn->setText(values["27"]);
-            ui->cpc2FlowRate->setText(values["28"]);
+            ui->cpc2Cn->setText(values["28"]);
+            ui->cpc2FlowRate->setText(values["27"]);
         }
     }
 }
 
-void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1)
+void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1, int reg)
 {
     Q_UNUSED(var1)
     int idx = 0;
@@ -182,12 +211,19 @@ void MainStartUp::onSigData(int cmd, QVariant var, QVariant var1)
     Md19Client *client = static_cast<Md19Client*>(sender());
     if(client == mdClient2)
         idx = 1;
-    qDebug()<< "on sigData" << cmd;
-    if(cmd == 0x5)
+    if(cmd == 0x5 && reg == 0)
     {
         if(var.toBool())
             mdStartBtns[idx]->setText("泵 停止");
         else
             mdStartBtns[idx]->setText("泵 启动");
     }
+}
+
+void MainStartUp::on_openTestDevBtn_clicked()
+{
+    if(testDevPage->isVisible())
+        testDevPage->raise();
+    else
+        testDevPage->show();
 }

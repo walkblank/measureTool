@@ -3,19 +3,52 @@
 Md19Client::Md19Client(QObject *parent)
     : QTcpSocket(parent)
 {
-    connect(this, SIGNAL(readyRead()), this, SLOT(onDataReady()));
+//    connect(this, SIGNAL(readyRead()), this, SLOT(onDataReady()));
+    connect(this, SIGNAL(readyRead()), this, SLOT(onDataRecv()));
 }
 
 int  Md19Client::writeMyData(const char *data, int writeLen)
 {
     QByteArray sendData = QByteArray(data, writeLen);
-    qDebug()<< "sendData" << QString(sendData.toHex(' '));
+//    qDebug()<< "sendData" << QString(sendData.toHex(' '));
     return write(data, writeLen);
 }
 
 void Md19Client::parseContent(QByteArray content)
 {
     int len = content.length();
+    int modAddr = content[0];
+    int funcCode = content[1];
+
+//    qDebug()<<"modAddr" << modAddr << "funcCode" << funcCode << "data Len" << len;
+    switch(funcCode)
+    {
+    case 0x5:     // 写单路寄存器
+    {
+        int regAddr = content[3];
+        int val = content[4];
+        regAddr == 0x0 ?  (val == 0 ? beStart = false : beStart = true) : (val == 0 ? beRemoteStart = false : beRemoteStart = true);
+//        qDebug()<<"regAddr" << regAddr;
+        emit sigData(funcCode, val == 0 ? false : true, 0,  regAddr);
+    }
+        break;
+    case 0x4:   // read multi reg
+        if (len == 7)
+        {
+            emit sigData(0x4,
+                             QString(QByteArray(content.data()+3, 2).toHex()),
+                             QString(QByteArray(content.data()+5,2).toHex()), len);
+        }
+        else if(len == 9)
+        {
+            QMap<QString,QString> param;
+            param["speed"] = QString(QByteArray(content.data()+3, 2).toHex());
+            param["temp"] = QString(QByteArray(content.data()+5, 2).toHex());
+            param["pressure"] = QString(QByteArray(content.data()+7, 2).toHex());
+            emit sigParam(funcCode, param);
+        }
+        break;
+    }
 }
 
 void Md19Client::onDataRecv()
@@ -23,7 +56,7 @@ void Md19Client::onDataRecv()
     static QByteArray dataLeft = QByteArray();
 
     QByteArray recvData = readAll();
-    qDebug()<<"+++recv Len" << recvData.length() <<"recvData" << recvData.toHex(' ');
+//    qDebug()<<"+++recv Len" << recvData.length() <<"recvData" << recvData.toHex(' ');
     dataLeft.append(recvData);
 
     while(dataLeft.length() > 0)
@@ -34,10 +67,11 @@ void Md19Client::onDataRecv()
         QByteArray content = dataLeft.mid(6, len);
         if(content.length() < len)
             break;
-        qDebug()<<"contentLen" << len;
-        qDebug()<<"content" << content.toHex(' ');
+//        qDebug()<<"contentLen" << len;
+//        qDebug()<<"content" << content.toHex(' ');
+        parseContent(content);
         dataLeft =  dataLeft.mid(6+len, dataLeft.length()-6-len);
-        qDebug()<<"dataLeft" << dataLeft.toHex(' ');
+//        qDebug()<<"dataLeft" << dataLeft.toHex(' ');
     }
 }
 
@@ -77,7 +111,7 @@ void Md19Client::onDataReady()
         case 0x0:
         {
             val == 0 ? beStart = false : beStart = true;
-            emit sigData(0x5, beStart, 0);
+            emit sigData(0x5, beStart, 0, 0);
         }
             break;
         case 0x1:
@@ -94,7 +128,7 @@ void Md19Client::onDataReady()
         if(dataLen == 6) //  read temp and flowrate
             emit sigData(0x4,
                              QString(QByteArray(readData.data()+9, 2).toHex()),
-                             QString(QByteArray(readData.data()+11,2).toHex()));
+                             QString(QByteArray(readData.data()+11,2).toHex()), 0);
 
         else if(dataLen == 8)
         {
@@ -103,7 +137,7 @@ void Md19Client::onDataReady()
     }
         break;
     case 0x10:
-        emit sigData(0x10, 0, 0);
+        emit sigData(0x10, 0, 0, 0);
         break;
     }
 }
@@ -135,6 +169,7 @@ void Md19Client::setTemp(unsigned short temp, unsigned short xishiV)
     // 0-10v   0-50000
     char data[4];
     //unsigned short int val = 25000;
+    qDebug()<<"xishiv" << xishiV;
     data[0] = 0xff & (temp >> 8);
     data[1] = 0xff & temp;
     data[3] = 0xff & xishiV;

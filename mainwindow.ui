@@ -28,6 +28,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="meterSetBtn">
+            <property name="text">
+             <string>设置</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="0" column="1">
@@ -222,6 +229,9 @@
           </item>
           <item>
            <widget class="QLineEdit" name="sampleCnt">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>10</string>
             </property>
@@ -326,39 +336,119 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>开始时间</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="startTime">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>180</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>当前时间</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="endTime">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>180</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QLineEdit" name="startVal"/>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
-         <widget class="QLineEdit" name="endVal"/>
+         <widget class="QCheckBox" name="autoAdjustYRangeChk">
+          <property name="text">
+           <string>自动调整Y轴范围</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="startVal">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>180</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="endVal">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>180</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="setRangeBtn">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
-           <string>Set Range</string>
+           <string>设置Y轴范围</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <widget class="Line" name="line">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="startCalibBtn">
         <property name="text">
-         <string>取值</string>
+         <string>开始校准</string>
         </property>
        </widget>
       </item>
@@ -368,7 +458,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>取值</string>
+         <string>开始取值</string>
         </property>
        </widget>
       </item>
@@ -392,19 +482,6 @@
          <string>SimuClient</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </item>

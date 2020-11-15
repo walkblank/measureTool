@@ -40,6 +40,8 @@ private slots:
     void on_averTime_textChanged(const QString &arg1);
     void on_saveBtn_clicked();
 
+    void onTestData(QString, QMap<QString,QString>);
+    void onClientData1(QString, QMap<QString,QString>);
     void onClientData(QString, QMap<QString,QString>);
     void onClientRet(QString,QString, QMap<QString,QString>);
 
@@ -61,6 +63,13 @@ private slots:
 
     void on_setRangeBtn_clicked();
 
+    void on_meterSetBtn_clicked();
+
+    void on_autoAdjustYRangeChk_toggled(bool checked);
+
+signals:
+    void sigStartQuery();
+
 private:
     Ui::MainWindow *ui;
 
@@ -71,8 +80,13 @@ private:
     QMutex mutex;
     QXlsx::Document *currXlsx = nullptr;
 
+    qint64 maxYrange = 1;
+    qint64 minYrange = 0;
     QValueAxis *yAxis;
+    QValueAxis *xAxis;
 
+    qint64 timeRange = 600;
+    qint64 pointCnt = 0;
 
     bool calib = false;
     bool autom = false;
@@ -82,12 +96,13 @@ private:
     int sampleCnt = 10;
     int writeCnt = 0;
 
-    QList<double> tmpPt,tmpSavePt;
+    QList<double> tmpPt,tmpSavePt, tmpTestPt;
 
     QMap<QString,QString> xishiVals;
 
     QLineSeries *cpc1slineSeries;
     QLineSeries *cpc10slineSeries;
+    QLineSeries *testlineSeries;
 
     ClientSimuPage *simuPage;
     QLineSeries *upperCalib;
@@ -103,7 +118,8 @@ private:
     QList<QString> enterAutoDevs;
 
     DatacompareModel *model;
-    QList<QString> datetimeList;
+    QList<QString> datetimeList, testDatetimeList;
+    QList<QString> cpcFlowList, testFlowList;
     QList<double>  cpcVList;
     QList<double>  testVList;
     QList<double>  errVList;

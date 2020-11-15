@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QShowEvent>
 #include <QHideEvent>
+#include <QTimer>
 
 #include "md19client.h"
 
@@ -34,17 +35,19 @@ private slots:
     void onClienDisconnected();
     void on_saveBtn_clicked();
     void onSigData(int cmd, QVariant, QVariant, int reg = 0);
+    void onParam(int funcCode, QMap<QString,QString>);
 
     void on_readTempBtn_clicked();
-
     void on_remoteSwiBtn_clicked();
+
+    void queryParam();
 
 private:
     Ui::MideSettingPage *ui;
     Md19Client *client;
     QString devName;
     QSettings *setting;
-
+    QTimer *queryTimer;
 
     void saveParam();
 };

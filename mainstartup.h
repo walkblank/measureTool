@@ -7,6 +7,7 @@
 #include "md19client.h"
 #include "smpsstatuspage.h"
 #include "calibclient.h"
+#include "testdevpage.h"
 
 namespace Ui {
 class MainStartUp;
@@ -41,8 +42,14 @@ private slots:
     void on_startMd2Btn_clicked();
 
     void onXishiValSig(QString val, QString devName);
-    void onSigData(int cmd, QVariant var, QVariant var1);
+    void onSigData(int cmd, QVariant var, QVariant var1, int reg);
     void onCpcDataSig(QString type, QMap<QString,QString>);
+
+    void on_openTestDevBtn_clicked();
+
+    void onTestQuerySignal();
+
+    void queryRoutine();
 
 private:
     Ui::MainStartUp *ui;
@@ -50,14 +57,17 @@ private:
     MainWindow *cpc1Window, *cpc2Window;
     MideSettingPage *mide1Page, *mide2Page;
     SmpsStatusPage *smpsPage;
+    TestDevPage *testDevPage;
 
     Md19Client *mdClient1, *mdClient2;
     CalibClient *cpc1Client, *cpc2Client;
-    CalibClient *smpsClient;
+    CalibClient *smpsClient, *testClient;
 
     MeasureServer *server, *server1, *server2;
 
     QList<QPushButton *> mdStartBtns;
+
+    QTimer *queryTimer;
 };
 
 #endif // MAINSTARTUP_H

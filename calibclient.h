@@ -19,6 +19,7 @@ public:
     void enterClassifierMode(QString diameter);
     void enterSmpsClassifierMode(QString diameter);
     void enterAutoMode();
+    void setMeter(QString diameter);
 
     int getValue(QList<QString> vals);
     int setValue(QMap<QString,QString> valueSet);
@@ -31,6 +32,11 @@ public:
     void disconnect();
     void close();
     int  state();
+
+    void setQuerying(bool b) {isQuerying = b;}
+    bool getQuerying() { return isQuerying; }
+    void setWorkingMode(QString mode) { this->mode = mode;}
+    QString getWorkingMode() { return mode;}
 
 signals:
     void sigReadData(QString type, QMap<QString,QString> values);
@@ -51,7 +57,8 @@ private:
     QMap<QString,QString> devValueSet;
     QMap<QString,QString> sendValueSet;
     QList<QString> modes;
-    QString mode;
+    QString mode = QString();
+    bool  isQuerying = false;
 
 private:
     void commDataProcess();

@@ -62,6 +62,13 @@ void CalibClient::enterSmpsClassifierMode(QString diameter)
     setValue(cmdMap);
 }
 
+void CalibClient::setMeter(QString diameter)
+{
+    QMap<QString,QString> cmdMap;
+    cmdMap["140"] = diameter;
+    setValue(cmdMap);
+}
+
 void CalibClient::enterAutoMode()
 {
     QMap<QString,QString> cmdMap;
@@ -216,7 +223,7 @@ void CalibClient::simuDataProcess()
                 }
                 else if(singleCmd == "27" || singleCmd == "28")
                 {
-                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(1.00)));
+                    sendValList.append(QString("%1=%2").arg(singleCmd).arg(QRandomGenerator::global()->bounded(1.00)+10));
                 }
                 else if(singleCmd == "0")
                 {
