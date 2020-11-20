@@ -135,7 +135,7 @@ void MainWindow::loadSettings()
 void MainWindow::onAutoTimeout()
 {
     QList<QString> channels;
-    channels << "27" << "28";
+    channels << "27" << "28" << "12";
     cpcClient->getValue(channels);
 }
 
@@ -143,7 +143,7 @@ void MainWindow::onTimerTimeout()
 {
     qDebug()<<"request cpc data";
     QList<QString> getChannels;
-    getChannels << "27" << "28";
+    getChannels << "27" << "28" << "12";
     cpcClient->getValue(getChannels);
 }
 
@@ -230,31 +230,40 @@ void MainWindow::on_startBtn_clicked()
         autoTimer->stop();
 
         QXlsx::Document  xlsx;
-        xlsx.write(1, 1, "时间");
-        xlsx.write(1, 2, "Cn");
-        xlsx.write(1, 3, "流量");
-        xlsx.write(1, 4, "时间(test)");
-        xlsx.write(1, 5, "Cn(test)");
-        xlsx.write(1, 6, "流量(test)");
-        xlsx.write(1, 7, "MD19-3E-1");
-        xlsx.write(1, 8, "MD19-3E-2");
+        xlsx.write(1, 1, "日期");
+        xlsx.write(1, 2, "时间");
+        xlsx.write(1, 3, "Cn");
+        xlsx.write(1, 4, "流量");
+        xlsx.write(1, 5, "压力");
+        xlsx.write(1, 6, "日期(test)");
+        xlsx.write(1, 7, "时间(test)");
+        xlsx.write(1, 8, "Cn(test)");
+        xlsx.write(1, 9, "流量(test)");
+        xlsx.write(1, 10, "压力(test)");
+        xlsx.write(1, 11, "MD19-3E-1");
+        xlsx.write(1, 12, "MD19-3E-2");
 
         int index = 1;
         foreach(QString flow,  cpcFlowList)
         {
-            xlsx.write(index+1, 1, datetimeList.at(index-1));
-            xlsx.write(index+1, 2, QString("%1").arg(cpcVList.at(index-1)));
-            xlsx.write(index+1, 3, cpcFlowList.at(index-1));
-            xlsx.write(index+1, 7, xishiVals["MD19_3E-1"]) ;
-            xlsx.write(index+1, 8, xishiVals["MD19_3E-2"]);
+            xlsx.write(index+1, 1, datetimeList.at(index-1).split('-')[0]);
+            xlsx.write(index+1, 2, datetimeList.at(index-1).split('-')[1]);
+            xlsx.write(index+1, 3, QString("%1").arg(cpcVList.at(index-1)));
+            xlsx.write(index+1, 4, cpcFlowList.at(index-1));
+            xlsx.write(index+1, 5, cpcPressureList.at(index-1));
+
+            xlsx.write(index+1, 11, xishiVals["MD19_3E-1"]) ;
+            xlsx.write(index+1, 12, xishiVals["MD19_3E-2"]);
             index+=1;
         }
         index = 1;
         foreach(QString flow,  testFlowList)
         {
-            xlsx.write(index+1, 4, testDatetimeList.at(index-1));
-            xlsx.write(index+1, 5, QString("%1").arg(testVList.at(index-1)));
-            xlsx.write(index+1, 6, testFlowList.at(index-1));
+            xlsx.write(index+1, 6, testDatetimeList.at(index-1).split('-')[0]);
+            xlsx.write(index+1, 7, testDatetimeList.at(index-1).split('-')[1]);
+            xlsx.write(index+1, 8, QString("%1").arg(testVList.at(index-1)));
+            xlsx.write(index+1, 9, testFlowList.at(index-1));
+            xlsx.write(index+1, 10, testPresssureList.at(index-1));
             index+=1;
         }
 
@@ -270,6 +279,16 @@ void MainWindow::on_startBtn_clicked()
     cpc1slineSeries->clear();
     cpc10slineSeries->clear();
     testlineSeries->clear();
+    tmpPt.clear();
+    datetimeList.clear();
+    tmpTestPt.clear();
+    testDatetimeList.clear();
+    cpcVList.clear();
+    testVList.clear();
+    cpcFlowList.clear();
+    testFlowList.clear();
+    cpcPressureList.clear();
+    testPresssureList.clear();
 
     sampleCnt = ui->sampleCnt->text().toUInt();
     sampleInterval = ui->sampleInterval->text().toUInt();
@@ -278,8 +297,8 @@ void MainWindow::on_startBtn_clicked()
     timer->stop();
     cpcClient->enterAutoMode();
     waitSomeTime(2000);
-    if(smpsCient->getWorkingMode() == QString() || smpsCient->getWorkingMode() == "classifier")
-        smpsCient->enterAutoMode();
+//    if(smpsCient->getWorkingMode() == QString() || smpsCient->getWorkingMode() == "classifier")
+//        smpsCient->enterAutoMode();
     ui->startBtn->setText("停止取值");
 }
 
@@ -366,12 +385,13 @@ void MainWindow::on_saveBtn_clicked()
 void MainWindow::onTestData(QString client, QMap<QString, QString> data)
 {
     qDebug()<<"ontestdata" << data;
-    if(data.contains("28") && data.size() == 2)
+    if(data.contains("28") && data.size() == 3)
     {
         if(autom)
         {
             double value = data["28"].toDouble();
             QString flowRate = data["27"];
+            QString pressure = data["12"];
             testlineSeries->append(pointCnt, value);
 
             tmpTestPt.append(value);
@@ -383,7 +403,9 @@ void MainWindow::onTestData(QString client, QMap<QString, QString> data)
                avalue = avalue/sampleInterval;
                testVList.append(avalue);
                testFlowList.append(flowRate);
+               testPresssureList.append(pressure);
                testDatetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
+               tmpTestPt.clear();
             }
         }
     }
@@ -392,10 +414,11 @@ void MainWindow::onTestData(QString client, QMap<QString, QString> data)
 void MainWindow::onClientData1(QString client, QMap<QString, QString> data)
 {
     static qint64 curMinValue = 0;
-    if(data.contains("28") && data.size() == 2)
+    if(data.contains("28") && data.size() == 3)
     {
         double value = data["28"].toDouble();
         QString flowRate = data["27"];
+        QString pressure = data["12"];
         ui->cnValue->setText(data["28"]);
 
         if(autom)
@@ -409,6 +432,7 @@ void MainWindow::onClientData1(QString client, QMap<QString, QString> data)
                 avalue = avalue/sampleInterval;
                 cpcVList.append(avalue);
                 cpcFlowList.append(flowRate);
+                cpcPressureList.append(pressure);
                 datetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
                 tmpSavePt.clear();
             }
@@ -425,7 +449,6 @@ void MainWindow::onClientData1(QString client, QMap<QString, QString> data)
             {
                 if((value-value/2) > minYrange)
                 {
-                    qDebug()<<"update minValue";
                     minYrange = value - value/2;
                     curMinValue = value;
                 }
@@ -592,11 +615,12 @@ void MainWindow::onClientRet(QString type, QString ret, QMap<QString,QString> se
         }
         if(setValues["201"] == "1")
         {
-            if(devName == "smps")
-                smpsCient->setWorkingMode("auto");
+//            if(devName == "smps")
+//                smpsCient->setWorkingMode("auto");
             if(ret == "ok")
                 autoReadyDevMap[devName] = true;
-            if(autoReadyDevMap.contains("cpc") && autoReadyDevMap.contains("smps"))
+//            if(autoReadyDevMap.contains("cpc") && autoReadyDevMap.contains("smps"))
+            if(autoReadyDevMap.contains("cpc"))
             {
                 autoTimer->start(1000);
 //                autoReadyDevMap.clear();

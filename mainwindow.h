@@ -119,7 +119,7 @@ private:
 
     DatacompareModel *model;
     QList<QString> datetimeList, testDatetimeList;
-    QList<QString> cpcFlowList, testFlowList;
+    QList<QString> cpcFlowList, testFlowList, cpcPressureList, testPresssureList;
     QList<double>  cpcVList;
     QList<double>  testVList;
     QList<double>  errVList;

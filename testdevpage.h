@@ -24,6 +24,8 @@ private slots:
 
    void on_connBtn_clicked();
 
+   void onClientData(QString, QMap<QString,QString>);
+
 private:
     Ui::TestDevPage *ui;
 

@@ -38,7 +38,6 @@ private slots:
     void onMdClientConnect();
 
     void on_startMd1Btn_clicked();
-
     void on_startMd2Btn_clicked();
 
     void onXishiValSig(QString val, QString devName);

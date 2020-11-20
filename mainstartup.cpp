@@ -9,7 +9,6 @@ MainStartUp::MainStartUp(QWidget *parent) :
 {
     ui->setupUi(this);
     setFixedSize(width(), height());
-
     queryTimer = new QTimer();
     connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryRoutine()));
 
@@ -89,7 +88,7 @@ void MainStartUp::onTestQuerySignal()
 void MainStartUp::queryRoutine()
 {
     QList<QString> channels;
-    channels << "27" << "28";
+    channels << "27" << "28" << "12";
     testClient->getValue(channels);
 }
 

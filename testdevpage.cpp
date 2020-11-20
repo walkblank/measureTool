@@ -24,6 +24,11 @@ void TestDevPage::setTestClient(CalibClient *client)
             this, SLOT(onClientData(QString, QMap<QString,QString>)));
 }
 
+void TestDevPage::onClientData(QString devName, QMap<QString, QString> data)
+{
+
+}
+
 void TestDevPage::saveParam()
 {
     settings->setValue("testAddr", ui->ipAddr->text());
