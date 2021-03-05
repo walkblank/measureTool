@@ -9,8 +9,8 @@ class CalibClient : public QObject
 {
     Q_OBJECT
 public:
-    CalibClient();
-    CalibClient(QString s);
+    CalibClient(QString type = QString());
+    CalibClient(QString s, bool beSimu);
     void AttachSocket(QTcpSocket *sock);
 
     void setClientType(QString type) {clientType = type;}
@@ -63,6 +63,7 @@ private:
 private:
     void commDataProcess();
     void simuDataProcess();
+    void akDataProcess();
 };
 
 #endif // CALIBCLIENT_H

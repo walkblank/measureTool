@@ -83,7 +83,7 @@ void MeasureServer::onNewConnection()
     qDebug()<<socket->peerAddress();
     QString address = socket->peerAddress().toString();
 
-    CalibClient *client = new CalibClient("simu");
+    CalibClient *client = new CalibClient("simu", true);
     client->AttachSocket(socket);
     connect(client, SIGNAL(sigReadData(QString, QMap<QString,QString>)),
             this, SIGNAL(sigOnClientData(QString, QMap<QString,QString>)));

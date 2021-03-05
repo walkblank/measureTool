@@ -6,9 +6,9 @@ ClientSimuPage::ClientSimuPage(QWidget *parent) :
     ui(new Ui::ClientSimuPage)
 {
     ui->setupUi(this);
-    cpc = new CalibClient("ss");
-    smps= new CalibClient("ss");
-    test = new CalibClient("ss");
+    cpc = new CalibClient("ss", true);
+    smps= new CalibClient("ss", true);
+    test = new CalibClient("ss", true);
     QSettings settings("setting.ini", QSettings::IniFormat);
 
     if(settings.contains("cpcaddr"))

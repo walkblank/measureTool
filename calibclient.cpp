@@ -1,6 +1,6 @@
 #include "calibclient.h"
 
-CalibClient::CalibClient()
+CalibClient::CalibClient(QString type)
 {
     sock = new QTcpSocket(this);
     connect(sock, SIGNAL(connected()), this, SLOT(onConnected()));
@@ -8,7 +8,8 @@ CalibClient::CalibClient()
     connect(sock, SIGNAL(readyRead()), this, SLOT(onDataReady()));
 }
 
-CalibClient::CalibClient(QString s)
+
+CalibClient::CalibClient(QString s, bool beSimu)
     :beSimu(true)
 {
     qDebug()<<s;
@@ -128,6 +129,32 @@ void CalibClient::onDataReady()
     {
         commDataProcess();
     }
+}
+
+void CalibClient::akDataProcess()
+{
+    static QByteArray dataLeft = QByteArray();
+    QByteArray readData = sock->readAll();
+    readData.prepend(dataLeft);
+
+    while(readData.contains(0x3))
+    {
+        int secEndPos = readData.indexOf(0x3);
+        QByteArray secData = readData.mid(0, secEndPos+1);
+        qDebug()<< "secData"<<secData.toHex(' ');
+
+        secData.remove(secData.size()-1, 1);
+        secData.remove(0, 1);
+        QList<QByteArray> dataArray;
+        dataArray = secData.split(' ');
+        foreach(QByteArray data, dataArray)
+            qDebug()<<data;
+
+        readData = readData.mid(secEndPos+1, -1);
+        qDebug()<<"left data" <<readData.toHex(' ');
+    }
+
+    dataLeft = readData;
 }
 
 void CalibClient::commDataProcess()
