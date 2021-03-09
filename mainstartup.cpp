@@ -87,9 +87,13 @@ void MainStartUp::onTestQuerySignal()
 
 void MainStartUp::queryRoutine()
 {
-    QList<QString> channels;
-    channels << "27" << "28" << "12";
-    testClient->getValue(channels);
+    if(testClient->getClientType() == "ak")
+        testClient->akSendQueryCommand();
+    else{
+        QList<QString> channels;
+        channels << "27" << "28" << "12";
+        testClient->getValue(channels);
+    }
 }
 
 void MainStartUp::onMdClientConnect()

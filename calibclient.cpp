@@ -127,8 +127,24 @@ void CalibClient::onDataReady()
     }
     else
     {
-        commDataProcess();
+        if(getClientType() == "ak")
+            akDataProcess();
+        else
+            commDataProcess();
     }
+}
+
+void CalibClient::akSendQueryCommand()
+{
+    QByteArray sendData;
+    sendData.append(0x2);
+    sendData.append(' ');
+    sendData.append("ACPC");
+    sendData.append(' ');
+    sendData.append("K0");
+    sendData.append(0x3);
+
+    sock->write(sendData);
 }
 
 void CalibClient::akDataProcess()
@@ -139,6 +155,7 @@ void CalibClient::akDataProcess()
 
     while(readData.contains(0x3))
     {
+        QMap<QString,QString> valMap;
         int secEndPos = readData.indexOf(0x3);
         QByteArray secData = readData.mid(0, secEndPos+1);
         qDebug()<< "secData"<<secData.toHex(' ');
@@ -149,7 +166,8 @@ void CalibClient::akDataProcess()
         dataArray = secData.split(' ');
         foreach(QByteArray data, dataArray)
             qDebug()<<data;
-
+        valMap["cn"] = QString(dataArray[5]);
+        valMap["flowRate"] = QString(dataArray[]);
         readData = readData.mid(secEndPos+1, -1);
         qDebug()<<"left data" <<readData.toHex(' ');
     }

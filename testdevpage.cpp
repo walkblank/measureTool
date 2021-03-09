@@ -40,12 +40,16 @@ void TestDevPage::onConnected()
     ui->ipAddr->setStyleSheet("background-color: rgb(0, 255, 127);");
     ui->connBtn->setText("断开");
     saveParam();
+    ui->chkAKDev->setDisabled(true);
+    ui->chkCPCDev->setDisabled(true);
 }
 
 void TestDevPage::onDisconnected()
 {
     ui->ipAddr->setStyleSheet("background-color: rgb(255, 255, 127);");
     ui->connBtn->setText("连接");
+    ui->chkAKDev->setDisabled(false);
+    ui->chkCPCDev->setDisabled(false);
 }
 
 TestDevPage::~TestDevPage()
@@ -57,7 +61,13 @@ void TestDevPage::on_connBtn_clicked()
 {
     qDebug()<<"smsp conn";
     if(testClient->state() != QAbstractSocket::ConnectedState)
+    {
         testClient->connectToHost(ui->ipAddr->text(),  ui->port->text().toUInt());
+        testClient->setClientType("ak");
+    }
     else
+    {
         testClient->disconnect();
+        testClient->setClientType(QString());
+    }
 }

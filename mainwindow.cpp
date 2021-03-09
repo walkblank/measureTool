@@ -34,7 +34,6 @@ MainWindow::MainWindow(QString dev, QWidget *parent)
     settingWindow = new ClientSettingWindow();
     stPage = new CpcStatusPage(dev);
     ui->clientListBtn->hide();
-//    ui->startCalibBtn->hide();
 
     QString dirPath = QApplication::applicationDirPath().append(QString("/%1").arg(dev));
     QFileInfo finfo(dirPath);
@@ -384,8 +383,12 @@ void MainWindow::on_saveBtn_clicked()
 
 void MainWindow::onTestData(QString client, QMap<QString, QString> data)
 {
-    qDebug()<<"ontestdata" << data;
-    if(data.contains("28") && data.size() == 3)
+    CalibClient *client = static_cast<CalibClient*>(sender());
+    if(client->getClientType() == "ak")
+    {
+
+    }
+    else if(data.contains("28") && data.size() == 3)
     {
         if(autom)
         {
@@ -397,15 +400,15 @@ void MainWindow::onTestData(QString client, QMap<QString, QString> data)
             tmpTestPt.append(value);
             if(tmpTestPt.size() == sampleInterval)
             {
-               double avalue = 0;
-               foreach(double v, tmpTestPt)
-                   avalue += v;
-               avalue = avalue/sampleInterval;
-               testVList.append(avalue);
-               testFlowList.append(flowRate);
-               testPresssureList.append(pressure);
-               testDatetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
-               tmpTestPt.clear();
+                double avalue = 0;
+                foreach(double v, tmpTestPt)
+                    avalue += v;
+                avalue = avalue/sampleInterval;
+                testVList.append(avalue);
+                testFlowList.append(flowRate);
+                testPresssureList.append(pressure);
+                testDatetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
+                tmpTestPt.clear();
             }
         }
     }

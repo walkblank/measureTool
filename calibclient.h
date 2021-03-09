@@ -38,6 +38,8 @@ public:
     void setWorkingMode(QString mode) { this->mode = mode;}
     QString getWorkingMode() { return mode;}
 
+    void akSendQueryCommand();
+
 signals:
     void sigReadData(QString type, QMap<QString,QString> values);
     void sigSetRet(QString type, QString ret, QMap<QString,QString> setValues);
