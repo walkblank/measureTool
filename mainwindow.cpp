@@ -218,8 +218,8 @@ void MainWindow::on_startBtn_clicked()
 {
     //if(xishiVals.size() != 2)
     //{
-      //  QMessageBox::warning(this, "提示", "请先设置稀释值", QMessageBox::Ok);
-        //return;
+    //  QMessageBox::warning(this, "提示", "请先设置稀释值", QMessageBox::Ok);
+    //return;
     //}
 
 
@@ -236,11 +236,19 @@ void MainWindow::on_startBtn_clicked()
         xlsx.write(1, 5, "压力");
         xlsx.write(1, 6, "日期(test)");
         xlsx.write(1, 7, "时间(test)");
-        xlsx.write(1, 8, "Cn(test)");
-        xlsx.write(1, 9, "流量(test)");
-        xlsx.write(1, 10, "压力(test)");
-        xlsx.write(1, 11, "MD19-3E-1");
-        xlsx.write(1, 12, "MD19-3E-2");
+        if(testDevType == "ak")
+        {
+            for(int i = 3; i < 24; i++)
+                xlsx.write(1, i+5, QString("%1(testAK)").arg(i));
+        }
+        else
+        {
+            xlsx.write(1, 8, "Cn(test)");
+            xlsx.write(1, 9, "流量(test)");
+            xlsx.write(1, 10, "压力(test)");
+            xlsx.write(1, 11, "MD19-3E-1");
+            xlsx.write(1, 12, "MD19-3E-2");
+        }
 
         int index = 1;
         foreach(QString flow,  cpcFlowList)
@@ -260,17 +268,23 @@ void MainWindow::on_startBtn_clicked()
         {
             xlsx.write(index+1, 6, testDatetimeList.at(index-1).split('-')[0]);
             xlsx.write(index+1, 7, testDatetimeList.at(index-1).split('-')[1]);
-            xlsx.write(index+1, 8, QString("%1").arg(testVList.at(index-1)));
-            xlsx.write(index+1, 9, testFlowList.at(index-1));
-            xlsx.write(index+1, 10, testPresssureList.at(index-1));
+            if(testDevType == "ak")
+            {
+                for(int i = 3; i < 24; i++)
+                    xlsx.write(index+1, i+5, akTestDataList.at(index-1)[QString("%1").arg(i)]);
+            }
+            else
+            {
+                xlsx.write(index+1, 8, QString("%1").arg(testVList.at(index-1)));
+                xlsx.write(index+1, 9, testFlowList.at(index-1));
+                xlsx.write(index+1, 10, testPresssureList.at(index-1));
+            }
             index+=1;
         }
 
         xlsx.saveAs(QApplication::applicationDirPath().append(QString("/%1/%2.xlsx").arg(deviceName)
                                                               .arg(QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss"))));
     }
-
-//    xlsxFileWriteHeader(currXlsx);
 
     pointCnt = 0;
     cpcPt1.clear();
@@ -288,6 +302,7 @@ void MainWindow::on_startBtn_clicked()
     testFlowList.clear();
     cpcPressureList.clear();
     testPresssureList.clear();
+    akTestDataList.clear();
 
     sampleCnt = ui->sampleCnt->text().toUInt();
     sampleInterval = ui->sampleInterval->text().toUInt();
@@ -296,8 +311,8 @@ void MainWindow::on_startBtn_clicked()
     timer->stop();
     cpcClient->enterAutoMode();
     waitSomeTime(2000);
-//    if(smpsCient->getWorkingMode() == QString() || smpsCient->getWorkingMode() == "classifier")
-//        smpsCient->enterAutoMode();
+    //    if(smpsCient->getWorkingMode() == QString() || smpsCient->getWorkingMode() == "classifier")
+    //        smpsCient->enterAutoMode();
     ui->startBtn->setText("停止取值");
 }
 
@@ -383,33 +398,40 @@ void MainWindow::on_saveBtn_clicked()
 
 void MainWindow::onTestData(QString client, QMap<QString, QString> data)
 {
-    CalibClient *client = static_cast<CalibClient*>(sender());
-    if(client->getClientType() == "ak")
+    double value;
+    QString flowRate, pressure;
+    testDevType = client;
+//    autom = true;
+    if(autom)
     {
-
-    }
-    else if(data.contains("28") && data.size() == 3)
-    {
-        if(autom)
+        if(client == "ak")
         {
-            double value = data["28"].toDouble();
-            QString flowRate = data["27"];
-            QString pressure = data["12"];
-            testlineSeries->append(pointCnt, value);
+            value = data["3"].toDouble();
+            akTestDataList.append(data);
+//            qDebug()<<data;
+//            flowRate = data["flowRate"];
+//            pressure = data["pressure"];
+        }
+        else if(data.contains("28") && data.size() == 3)
+        {
+            value = data["28"].toDouble();
+            flowRate = data["27"];
+            pressure = data["12"];
+            testFlowList.append(flowRate);
+            testPresssureList.append(pressure);
+        }
 
-            tmpTestPt.append(value);
-            if(tmpTestPt.size() == sampleInterval)
-            {
-                double avalue = 0;
-                foreach(double v, tmpTestPt)
-                    avalue += v;
-                avalue = avalue/sampleInterval;
-                testVList.append(avalue);
-                testFlowList.append(flowRate);
-                testPresssureList.append(pressure);
-                testDatetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
-                tmpTestPt.clear();
-            }
+        testlineSeries->append(pointCnt, value);
+        tmpTestPt.append(value);
+        if(tmpTestPt.size() == sampleInterval)
+        {
+            double avalue = 0;
+            foreach(double v, tmpTestPt)
+                avalue += v;
+            avalue = avalue/sampleInterval;
+            testVList.append(avalue);
+            testDatetimeList.append(QDateTime::currentDateTime().toString("yyyy/MM/dd-hh:mm:ss"));
+            tmpTestPt.clear();
         }
     }
 }
@@ -646,10 +668,6 @@ void MainWindow::on_setMeter_textChanged(const QString &arg1)
     arg1.toInt(&ret);
     if(ret)
         settings->setValue(QString("%1_diameter").arg(deviceName), arg1);
-}
-
-void MainWindow::on_tableBtn_clicked()
-{
 }
 
 void MainWindow::on_cpcConnBtn_clicked()

@@ -158,18 +158,18 @@ void CalibClient::akDataProcess()
         QMap<QString,QString> valMap;
         int secEndPos = readData.indexOf(0x3);
         QByteArray secData = readData.mid(0, secEndPos+1);
-        qDebug()<< "secData"<<secData.toHex(' ');
 
         secData.remove(secData.size()-1, 1);
         secData.remove(0, 1);
         QList<QByteArray> dataArray;
         dataArray = secData.split(' ');
-        foreach(QByteArray data, dataArray)
-            qDebug()<<data;
-        valMap["cn"] = QString(dataArray[5]);
-        valMap["flowRate"] = QString(dataArray[]);
+        for(int i = 5; i < dataArray.size(); i ++)
+            valMap[QString("%1").arg(i-2)] = QString(dataArray[i]);
+//        valMap["cn"] = QString(dataArray[5]);
+//        valMap["flowRate"] = QString(dataArray[11]);
+//        valMap["pressure"] = QString(dataArray[10]);
+        emit sigReadData(getClientType(), valMap);
         readData = readData.mid(secEndPos+1, -1);
-        qDebug()<<"left data" <<readData.toHex(' ');
     }
 
     dataLeft = readData;

@@ -49,8 +49,6 @@ private slots:
 
     void on_setMeter_textChanged(const QString &arg1);
 
-    void on_tableBtn_clicked();
-
     void on_cpcConnBtn_clicked();
 
     void onConnected();
@@ -74,6 +72,7 @@ private:
     Ui::MainWindow *ui;
 
     QString deviceName;
+    QString testDevType;
     CalibClient *cpcClient, *smpsCient;
     QChart  *m_chart;
     QChartView *m_chartView;
@@ -120,6 +119,7 @@ private:
     DatacompareModel *model;
     QList<QString> datetimeList, testDatetimeList;
     QList<QString> cpcFlowList, testFlowList, cpcPressureList, testPresssureList;
+    QList<QMap<QString,QString>> akTestDataList;
     QList<double>  cpcVList;
     QList<double>  testVList;
     QList<double>  errVList;

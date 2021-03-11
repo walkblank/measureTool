@@ -13,6 +13,10 @@ TestDevPage::TestDevPage(QWidget *parent) :
         ui->ipAddr->setText(settings->value("testAddr").toString());
     if(settings->contains("testPort"))
         ui->port->setText(settings->value("testPort").toString());
+    if(settings->contains("ak"))
+        ui->chkAKDev->setChecked(settings->value("ak").toBool());
+    if(settings->contains("cpc"))
+        ui->chkAKDev->setChecked(settings->value("cpc").toBool());
 }
 
 void TestDevPage::setTestClient(CalibClient *client)
@@ -33,6 +37,8 @@ void TestDevPage::saveParam()
 {
     settings->setValue("testAddr", ui->ipAddr->text());
     settings->setValue("testPort", ui->port->text());
+    settings->setValue("ak", ui->chkAKDev->isChecked());
+    settings->setValue("cpc", ui->chkCPCDev->isChecked());
 }
 
 void TestDevPage::onConnected()
@@ -62,8 +68,9 @@ void TestDevPage::on_connBtn_clicked()
     qDebug()<<"smsp conn";
     if(testClient->state() != QAbstractSocket::ConnectedState)
     {
+        if(ui->chkAKDev->isChecked())
+            testClient->setClientType("ak");
         testClient->connectToHost(ui->ipAddr->text(),  ui->port->text().toUInt());
-        testClient->setClientType("ak");
     }
     else
     {
