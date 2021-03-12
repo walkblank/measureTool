@@ -250,34 +250,34 @@ void MainWindow::on_startBtn_clicked()
             xlsx.write(1, 12, "MD19-3E-2");
         }
 
-        int index = 1;
+        int index = 2;
         foreach(QString flow,  cpcFlowList)
         {
-            xlsx.write(index+1, 1, datetimeList.at(index-1).split('-')[0]);
-            xlsx.write(index+1, 2, datetimeList.at(index-1).split('-')[1]);
-            xlsx.write(index+1, 3, QString("%1").arg(cpcVList.at(index-1)));
-            xlsx.write(index+1, 4, cpcFlowList.at(index-1));
-            xlsx.write(index+1, 5, cpcPressureList.at(index-1));
+            xlsx.write(index, 1, datetimeList.at(index-2).split('-')[0]);
+            xlsx.write(index, 2, datetimeList.at(index-2).split('-')[1]);
+            xlsx.write(index, 3, QString("%1").arg(cpcVList.at(index-2)));
+            xlsx.write(index, 4, cpcFlowList.at(index-2));
+            xlsx.write(index, 5, cpcPressureList.at(index-2));
 
-            xlsx.write(index+1, 11, xishiVals["MD19_3E-1"]) ;
-            xlsx.write(index+1, 12, xishiVals["MD19_3E-2"]);
+            xlsx.write(index, 11, xishiVals["MD19_3E-1"]) ;
+            xlsx.write(index, 12, xishiVals["MD19_3E-2"]);
             index+=1;
         }
-        index = 1;
+        index = 2;
         foreach(QString flow,  testFlowList)
         {
-            xlsx.write(index+1, 6, testDatetimeList.at(index-1).split('-')[0]);
-            xlsx.write(index+1, 7, testDatetimeList.at(index-1).split('-')[1]);
+            xlsx.write(index, 6, testDatetimeList.at(index-2).split('-')[0]);
+            xlsx.write(index, 7, testDatetimeList.at(index-2).split('-')[1]);
             if(testDevType == "ak")
             {
                 for(int i = 3; i < 24; i++)
-                    xlsx.write(index+1, i+5, akTestDataList.at(index-1)[QString("%1").arg(i)]);
+                    xlsx.write(index, i+5, akTestDataList.at(index-2)[QString("%1").arg(i)]);
             }
             else
             {
-                xlsx.write(index+1, 8, QString("%1").arg(testVList.at(index-1)));
-                xlsx.write(index+1, 9, testFlowList.at(index-1));
-                xlsx.write(index+1, 10, testPresssureList.at(index-1));
+                xlsx.write(index, 8, QString("%1").arg(testVList.at(index-2)));
+                xlsx.write(index, 9, testFlowList.at(index-2));
+                xlsx.write(index, 10, testPresssureList.at(index-2));
             }
             index+=1;
         }
@@ -417,10 +417,10 @@ void MainWindow::onTestData(QString client, QMap<QString, QString> data)
             value = data["28"].toDouble();
             flowRate = data["27"];
             pressure = data["12"];
-            testFlowList.append(flowRate);
             testPresssureList.append(pressure);
         }
 
+        testFlowList.append(flowRate);
         testlineSeries->append(pointCnt, value);
         tmpTestPt.append(value);
         if(tmpTestPt.size() == sampleInterval)
